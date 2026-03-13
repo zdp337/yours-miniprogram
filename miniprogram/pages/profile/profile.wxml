@@ -1,0 +1,132 @@
+<!-- 个人中心 — Yours·凝刻 -->
+<view class="profile-page">
+  <!-- 自定义导航栏 -->
+  <view class="nav-bar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-content">
+      <text class="nav-title">我的</text>
+    </view>
+  </view>
+
+  <scroll-view 
+    scroll-y 
+    class="scroll-area" 
+    style="padding-top: {{navHeight}}px;"
+    enhanced
+    show-scrollbar="{{false}}"
+  >
+    <!-- 用户信息卡片 -->
+    <view class="user-card" bindtap="goToProfileEdit">
+      <view class="user-avatar-wrap">
+        <image 
+          wx:if="{{userInfo.avatarUrl}}" 
+          class="user-avatar" 
+          src="{{userInfo.avatarUrl}}" 
+          mode="aspectFill"
+        />
+        <view wx:else class="user-avatar-placeholder">
+          <text>👤</text>
+        </view>
+      </view>
+      <view class="user-info">
+        <text class="user-nickname">{{userInfo.nickname || '点击设置昵称'}}</text>
+        <view class="user-phone" wx:if="{{userInfo.phone}}">
+          <text class="phone-text">📱 {{userInfo.phone}}</text>
+        </view>
+        <view class="user-phone" wx:else>
+          <text class="phone-bind-tip">点击绑定手机号</text>
+        </view>
+      </view>
+      <text class="arrow">›</text>
+    </view>
+
+    <!-- 订单快捷入口 -->
+    <view class="order-section card">
+      <view class="section-header" bindtap="goToOrderList">
+        <text class="section-title">我的订单</text>
+        <view class="section-more">
+          <text>全部订单</text>
+          <text class="arrow-sm">›</text>
+        </view>
+      </view>
+      <view class="order-shortcuts">
+        <view class="shortcut-item" bindtap="goToOrderList" data-status="pending_payment">
+          <view class="shortcut-icon">💰</view>
+          <text class="shortcut-label">待支付</text>
+        </view>
+        <view class="shortcut-item" bindtap="goToOrderList" data-status="producing">
+          <view class="shortcut-icon">🔨</view>
+          <text class="shortcut-label">制作中</text>
+        </view>
+        <view class="shortcut-item" bindtap="goToOrderList" data-status="shipped">
+          <view class="shortcut-icon">🚚</view>
+          <text class="shortcut-label">已发货</text>
+        </view>
+        <view class="shortcut-item" bindtap="goToOrderList" data-status="completed">
+          <view class="shortcut-icon">✅</view>
+          <text class="shortcut-label">已完成</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 我的模型 -->
+    <view class="model-section card">
+      <view class="section-header" bindtap="goToModelList">
+        <text class="section-title">我的模型</text>
+        <view class="section-more">
+          <text>{{modelCount}}个模型</text>
+          <text class="arrow-sm">›</text>
+        </view>
+      </view>
+      <view class="model-preview" wx:if="{{modelList.length > 0}}">
+        <view 
+          class="model-thumb" 
+          wx:for="{{modelList}}" 
+          wx:key="id"
+          bindtap="goToModelDetail"
+          data-id="{{item.id}}"
+        >
+          <view class="model-placeholder">
+            <text>🎭</text>
+          </view>
+        </view>
+      </view>
+      <view class="empty-model" wx:else>
+        <text class="empty-text">还没有模型，去创建一个吧 ✨</text>
+      </view>
+    </view>
+
+    <!-- 功能列表 -->
+    <view class="func-list card">
+      <view class="func-item" bindtap="goToAddressList">
+        <text class="func-icon">📍</text>
+        <text class="func-label">收货地址</text>
+        <text class="arrow-sm">›</text>
+      </view>
+      <view class="func-item" bindtap="goToShare">
+        <text class="func-icon">📤</text>
+        <text class="func-label">分享给好友</text>
+        <text class="arrow-sm">›</text>
+      </view>
+      <view class="func-item" bindtap="goToService">
+        <text class="func-icon">💬</text>
+        <text class="func-label">联系客服</text>
+        <text class="arrow-sm">›</text>
+      </view>
+      <view class="func-item" bindtap="goToAbout">
+        <text class="func-icon">ℹ️</text>
+        <text class="func-label">关于我们</text>
+        <text class="arrow-sm">›</text>
+      </view>
+    </view>
+
+    <!-- 注销 -->
+    <view class="logout-section">
+      <view class="logout-btn" bindtap="handleLogout">
+        <text>退出登录</text>
+      </view>
+    </view>
+
+    <!-- 底部安全区 -->
+    <view class="safe-area-bottom"></view>
+  </scroll-view>
+</view>

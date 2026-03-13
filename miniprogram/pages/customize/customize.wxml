@@ -1,0 +1,9 @@
+<!-- 定制页（占位）— Yours·凝刻 -->
+<view class="customize-page">
+  <view class="empty-state">
+    <text class="empty-icon">✨</text>
+    <text class="empty-title">定制功能即将上线</text>
+    <text class="empty-desc">先去首页上传照片生成你的专属手办模型吧</text>
+    <button class="go-home-btn" bindtap="goHome">去首页看看</button>
+  </view>
+</view>

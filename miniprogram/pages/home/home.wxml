@@ -1,0 +1,109 @@
+<!-- 首页 — Yours·凝刻 -->
+<view class="home-page">
+  <!-- 自定义导航栏 -->
+  <view class="nav-bar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-content">
+      <text class="nav-title">Yours·凝刻</text>
+    </view>
+  </view>
+
+  <scroll-view 
+    scroll-y 
+    class="scroll-area" 
+    style="padding-top: {{navHeight}}px;"
+    enhanced
+    show-scrollbar="{{false}}"
+  >
+    <!-- Banner 区域 -->
+    <view class="banner-section">
+      <swiper 
+        class="banner-swiper" 
+        indicator-dots 
+        autoplay 
+        interval="4000" 
+        duration="500"
+        indicator-color="rgba(255,255,255,0.5)"
+        indicator-active-color="#FFFFFF"
+        circular
+      >
+        <swiper-item>
+          <view class="banner-item banner-1">
+            <view class="banner-text">
+              <text class="banner-title">把你变成手办</text>
+              <text class="banner-subtitle">AI 一键生成 Q 版 3D 模型</text>
+            </view>
+          </view>
+        </swiper-item>
+        <swiper-item>
+          <view class="banner-item banner-2">
+            <view class="banner-text">
+              <text class="banner-title">独一无二的你</text>
+              <text class="banner-subtitle">个性化定制，专属仪式感</text>
+            </view>
+          </view>
+        </swiper-item>
+      </swiper>
+    </view>
+
+    <!-- 核心入口：开始定制 -->
+    <view class="action-section">
+      <view class="action-card" bindtap="goToCreate">
+        <view class="action-icon-wrap">
+          <text class="action-icon">📸</text>
+        </view>
+        <view class="action-info">
+          <text class="action-title">开始定制你的手办</text>
+          <text class="action-desc">上传一张全身照，AI 帮你生成 Q 版 3D 模型</text>
+        </view>
+        <text class="action-arrow">›</text>
+      </view>
+    </view>
+
+    <!-- 制作流程 -->
+    <view class="process-section">
+      <view class="section-title">制作流程</view>
+      <view class="process-steps">
+        <view class="step-item">
+          <view class="step-num">1</view>
+          <text class="step-label">上传照片</text>
+        </view>
+        <view class="step-line"></view>
+        <view class="step-item">
+          <view class="step-num">2</view>
+          <text class="step-label">AI 生成</text>
+        </view>
+        <view class="step-line"></view>
+        <view class="step-item">
+          <view class="step-num">3</view>
+          <text class="step-label">预览确认</text>
+        </view>
+        <view class="step-line"></view>
+        <view class="step-item">
+          <view class="step-num">4</view>
+          <text class="step-label">定制下单</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 精选展示 -->
+    <view class="showcase-section">
+      <view class="section-title">精选作品</view>
+      <view class="showcase-grid">
+        <view 
+          class="showcase-item" 
+          wx:for="{{showcaseList}}" 
+          wx:key="id"
+        >
+          <view class="showcase-placeholder">
+            <text class="placeholder-icon">🎭</text>
+          </view>
+          <text class="showcase-label">{{item.label}}</text>
+        </view>
+      </view>
+      <view class="showcase-tip">更多作品即将上线...</view>
+    </view>
+
+    <!-- 底部安全区 -->
+    <view class="safe-area-bottom"></view>
+  </scroll-view>
+</view>

@@ -1,0 +1,35 @@
+# 依赖
+node_modules/
+miniprogram/miniprogram_npm/
+
+# 编译产物
+dist/
+server/dist/
+
+# 环境变量
+.env
+.env.local
+.env.production
+
+# IDE
+.vscode/
+.idea/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+$null
+
+# 日志
+*.log
+npm-debug.log*
+
+# 临时文件
+_temp_*/
+*.tmp
+
+# 小程序编译缓存
+miniprogram/unpackage/
+
+# Tab栏图标占位（后续替换为真实图标）
+# miniprogram/assets/icons/

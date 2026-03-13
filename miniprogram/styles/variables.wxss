@@ -1,0 +1,8 @@
+/* Yours·凝刻 — 全局样式变量 */
+
+/* 品牌色 */
+/* --brand-color: #333333 */
+/* --accent-color: #FF6B35 */
+
+/* 使用方式：在 app.wxss 的 page 选择器中已定义 CSS 变量 */
+/* 各页面可直接使用 var(--brand-color) 等 */

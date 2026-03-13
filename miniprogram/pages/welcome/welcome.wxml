@@ -1,0 +1,40 @@
+<!-- 欢迎页 — Yours·凝刻 -->
+<view class="welcome-page">
+  <!-- 品牌展示区 -->
+  <view class="brand-area">
+    <view class="brand-logo">
+      <text class="logo-text">Y</text>
+    </view>
+    <view class="brand-name">Yours·凝刻</view>
+    <view class="brand-slogan">把你变成一个手办</view>
+    <view class="brand-desc">AI 驱动 · 个性化 Q 版 3D 手办定制</view>
+  </view>
+
+  <!-- 登录区 -->
+  <view class="login-area">
+    <!-- 微信一键登录按钮 -->
+    <button 
+      class="login-btn"
+      open-type="{{agreed ? '' : ''}}"
+      bindtap="handleLogin"
+      loading="{{isLoading}}"
+      disabled="{{isLoading}}"
+    >
+      <image class="wx-icon" src="/assets/icons/wechat-white.png" mode="aspectFit" />
+      <text>微信一键登录</text>
+    </button>
+
+    <!-- 协议勾选 -->
+    <view class="agreement-area" bindtap="toggleAgreement">
+      <view class="checkbox {{agreed ? 'checked' : ''}}">
+        <text wx:if="{{agreed}}" class="check-icon">✓</text>
+      </view>
+      <view class="agreement-text">
+        <text>我已阅读并同意</text>
+        <text class="link" catchtap="openUserAgreement">《用户协议》</text>
+        <text>和</text>
+        <text class="link" catchtap="openPrivacyPolicy">《隐私政策》</text>
+      </view>
+    </view>
+  </view>
+</view>

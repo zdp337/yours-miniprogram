@@ -1,0 +1,132 @@
+/* 欢迎页样式 — Yours·凝刻 */
+
+.welcome-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: linear-gradient(180deg, #FFFFFF 0%, #F8F8F8 100%);
+  padding: 0 60rpx;
+}
+
+/* 品牌展示区 */
+.brand-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 200rpx;
+}
+
+.brand-logo {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 40rpx;
+  background: linear-gradient(135deg, #333333 0%, #666666 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40rpx;
+  box-shadow: 0 16rpx 40rpx rgba(0, 0, 0, 0.15);
+}
+
+.logo-text {
+  font-size: 80rpx;
+  font-weight: 700;
+  color: #FFFFFF;
+  font-family: 'Georgia', serif;
+}
+
+.brand-name {
+  font-size: 48rpx;
+  font-weight: 700;
+  color: #333333;
+  letter-spacing: 4rpx;
+  margin-bottom: 16rpx;
+}
+
+.brand-slogan {
+  font-size: 32rpx;
+  color: #666666;
+  margin-bottom: 12rpx;
+}
+
+.brand-desc {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+/* 登录区 */
+.login-area {
+  padding-bottom: 120rpx;
+}
+
+.login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 96rpx;
+  background: #07C160;
+  border-radius: 48rpx;
+  border: none;
+  margin-bottom: 32rpx;
+  padding: 0;
+}
+
+.login-btn text {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.login-btn::after {
+  border: none;
+}
+
+.wx-icon {
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 12rpx;
+}
+
+/* 协议区 */
+.agreement-area {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0 20rpx;
+}
+
+.checkbox {
+  width: 32rpx;
+  height: 32rpx;
+  border: 2rpx solid #CCCCCC;
+  border-radius: 50%;
+  margin-right: 12rpx;
+  margin-top: 4rpx;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkbox.checked {
+  background: #07C160;
+  border-color: #07C160;
+}
+
+.check-icon {
+  font-size: 20rpx;
+  color: #FFFFFF;
+}
+
+.agreement-text {
+  font-size: 24rpx;
+  color: #999999;
+  line-height: 1.6;
+}
+
+.agreement-text .link {
+  color: #576B95;
+}

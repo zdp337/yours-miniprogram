@@ -1,0 +1,152 @@
+// Yours·凝刻 — 数据库模型定义
+// 迭代 1：用户体系 + 收货地址 + 每日使用量
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ===== 迭代 1 =====
+
+/// 用户表
+model User {
+  id        BigInt   @id @default(autoincrement())
+  openId    String   @unique @map("open_id") @db.VarChar(64)
+  unionId   String?  @map("union_id") @db.VarChar(64)
+  nickname  String?  @db.VarChar(50)
+  avatarUrl String?  @map("avatar_url") @db.VarChar(500)
+  phone     String?  @db.VarChar(20)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // 关联
+  addresses  Address[]
+  photos     Photo[]
+  models     Model[]
+  orders     Order[]
+  dailyUsage DailyUsage[]
+
+  @@map("users")
+}
+
+/// 收货地址表
+model Address {
+  id        BigInt   @id @default(autoincrement())
+  userId    BigInt   @map("user_id")
+  name      String   @db.VarChar(50)
+  phone     String   @db.VarChar(20)
+  province  String   @db.VarChar(50)
+  city      String   @db.VarChar(50)
+  district  String   @db.VarChar(50)
+  detail    String   @db.VarChar(200)
+  isDefault Boolean  @default(false) @map("is_default")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // 关联
+  user   User    @relation(fields: [userId], references: [id])
+  orders Order[]
+
+  @@map("addresses")
+}
+
+/// 每日生成次数表
+model DailyUsage {
+  id        BigInt   @id @default(autoincrement())
+  userId    BigInt   @map("user_id")
+  usageDate DateTime @map("usage_date") @db.Date
+  usedCount Int      @default(0) @map("used_count")
+
+  // 关联
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, usageDate])
+  @@map("daily_usage")
+}
+
+// ===== 迭代 2 预留 =====
+
+/// 照片表
+model Photo {
+  id          BigInt   @id @default(autoincrement())
+  userId      BigInt   @map("user_id")
+  originalUrl String   @map("original_url") @db.VarChar(500)
+  croppedUrl  String?  @map("cropped_url") @db.VarChar(500)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  // 关联
+  user   User    @relation(fields: [userId], references: [id])
+  models Model[]
+
+  @@map("photos")
+}
+
+/// 3D模型表
+model Model {
+  id          BigInt    @id @default(autoincrement())
+  userId      BigInt    @map("user_id")
+  photoId     BigInt    @map("photo_id")
+  status      String    @default("queued") @db.VarChar(20) // queued|generating|completed|failed
+  modelUrl    String?   @map("model_url") @db.VarChar(500)
+  previewUrl  String?   @map("preview_url") @db.VarChar(500)
+  failReason  String?   @map("fail_reason") @db.VarChar(200)
+  retryCount  Int       @default(0) @map("retry_count")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  completedAt DateTime? @map("completed_at")
+
+  // 关联
+  user   User    @relation(fields: [userId], references: [id])
+  photo  Photo   @relation(fields: [photoId], references: [id])
+  orders Order[]
+
+  @@map("models")
+}
+
+// ===== 迭代 4 预留 =====
+
+/// 订单表
+model Order {
+  id            BigInt    @id @default(autoincrement())
+  orderNo       String    @unique @map("order_no") @db.VarChar(30)
+  userId        BigInt    @map("user_id")
+  modelId       BigInt    @map("model_id")
+  addressId     BigInt    @map("address_id")
+  status        String    @default("pending_payment") @db.VarChar(20) // pending_payment|cancelled|producing|shipped|completed|refunding|refunded
+  figurineSize  String    @map("figurine_size") @db.VarChar(5) // S|M|L
+  totalPrice    Decimal   @map("total_price") @db.Decimal(10, 2)
+  discountPrice Decimal   @default(0) @map("discount_price") @db.Decimal(10, 2)
+  shippingFee   Decimal   @default(0) @map("shipping_fee") @db.Decimal(10, 2)
+  payPrice      Decimal   @map("pay_price") @db.Decimal(10, 2)
+  packageDealId String?   @map("package_deal_id") @db.VarChar(50)
+  remark        String?   @db.VarChar(200)
+  paidAt        DateTime? @map("paid_at")
+  shippedAt     DateTime? @map("shipped_at")
+  completedAt   DateTime? @map("completed_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  expireAt      DateTime? @map("expire_at")
+
+  // 关联
+  user       User        @relation(fields: [userId], references: [id])
+  model      Model       @relation(fields: [modelId], references: [id])
+  address    Address     @relation(fields: [addressId], references: [id])
+  orderItems OrderItem[]
+
+  @@map("orders")
+}
+
+/// 订单商品明细表
+model OrderItem {
+  id       BigInt  @id @default(autoincrement())
+  orderId  BigInt  @map("order_id")
+  itemType String  @map("item_type") @db.VarChar(30) // figurine|model_photo_print|original_photo_print|package_box
+  itemSpec String? @map("item_spec") @db.VarChar(100)
+  price    Decimal @db.Decimal(10, 2)
+
+  // 关联
+  order Order @relation(fields: [orderId], references: [id])
+
+  @@map("order_items")
+}

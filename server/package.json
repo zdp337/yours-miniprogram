@@ -1,0 +1,35 @@
+{
+  "name": "yours-server",
+  "version": "1.0.0",
+  "description": "Yours·凝刻 后端服务",
+  "main": "dist/app.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
+    "build": "tsc",
+    "start": "node dist/app.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:push": "prisma db push"
+  },
+  "dependencies": {
+    "koa": "^2.15.0",
+    "koa-router": "^12.0.1",
+    "koa-bodyparser": "^4.4.1",
+    "koa-cors": "^0.0.16",
+    "@prisma/client": "^5.10.0",
+    "jsonwebtoken": "^9.0.2",
+    "axios": "^1.6.7",
+    "dotenv": "^16.4.4",
+    "ioredis": "^5.3.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "ts-node-dev": "^2.0.0",
+    "prisma": "^5.10.0",
+    "@types/koa": "^2.15.0",
+    "@types/koa-router": "^7.4.8",
+    "@types/koa-bodyparser": "^4.3.12",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/node": "^20.11.16"
+  }
+}

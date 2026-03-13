@@ -1,0 +1,64 @@
+<!-- 个人信息编辑 — Yours·凝刻 -->
+<view class="edit-page">
+  <!-- 头像 -->
+  <view class="edit-section">
+    <view class="edit-item" bindtap="chooseAvatar">
+      <text class="edit-label">头像</text>
+      <view class="edit-value">
+        <image 
+          wx:if="{{avatarUrl}}" 
+          class="avatar-preview" 
+          src="{{avatarUrl}}" 
+          mode="aspectFill"
+        />
+        <view wx:else class="avatar-placeholder">
+          <text>👤</text>
+        </view>
+        <text class="arrow-sm">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 昵称 -->
+  <view class="edit-section">
+    <view class="edit-item">
+      <text class="edit-label">昵称</text>
+      <view class="edit-value">
+        <input 
+          class="edit-input"
+          type="nickname"
+          placeholder="请输入昵称"
+          value="{{nickname}}"
+          bindinput="onNicknameInput"
+          maxlength="20"
+        />
+      </view>
+    </view>
+  </view>
+
+  <!-- 手机号 -->
+  <view class="edit-section">
+    <view class="edit-item">
+      <text class="edit-label">手机号</text>
+      <view class="edit-value">
+        <text wx:if="{{phone}}" class="phone-display">{{phone}}</text>
+        <button 
+          wx:else 
+          class="bind-phone-btn"
+          open-type="getPhoneNumber"
+          bindgetphonenumber="onGetPhoneNumber"
+        >绑定手机号</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 保存按钮 -->
+  <view class="save-area">
+    <button 
+      class="save-btn" 
+      bindtap="handleSave"
+      loading="{{isSaving}}"
+      disabled="{{isSaving}}"
+    >保存</button>
+  </view>
+</view>

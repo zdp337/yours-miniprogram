@@ -1,0 +1,13 @@
+{
+  "name": "yours-miniprogram",
+  "version": "1.0.0",
+  "description": "Yours·凝刻 微信小程序前端",
+  "dependencies": {
+    "tdesign-miniprogram": "^1.5.0",
+    "mobx-miniprogram": "^4.13.2",
+    "mobx-miniprogram-bindings": "^2.1.5"
+  },
+  "devDependencies": {
+    "miniprogram-api-typings": "^3.12.0"
+  }
+}

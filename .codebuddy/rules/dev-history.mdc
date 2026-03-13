@@ -1,0 +1,75 @@
+---
+description: 
+alwaysApply: true
+enabled: true
+updatedAt: 2026-03-04T09:03:35.953Z
+provider: 
+---
+
+# 项目开发历史记录
+
+## 说明
+每次开发输出时，必须在此文件中记录：哪位成员做了什么工作、修改/新建了哪些文件。
+AI Agent 在每次开发任务完成后，**必须更新此文件**，追加本次迭代的工作记录。
+
+---
+
+## 迭代 1：基础架构 + 用户体系（Yours·凝刻）
+
+> 产品：Yours·凝刻 — AI 个性化 Q 版 3D 手办定制微信小程序
+> 技术栈：微信小程序原生+TS+TDesign，后端 Koa2+MySQL(Prisma)+Redis
+
+### PM（组长）工作
+- 项目架构设计：微信小程序原生 + Koa2 后端
+- 输出迭代1开发任务分配表 `docs/迭代1-开发任务分配.md`
+- 项目初始化：前端 `miniprogram/` + 后端 `server/`
+- 目录结构规范制定
+
+### 研发-A — 后端核心服务
+- **工作内容**:
+  - 数据库 Prisma Schema（7张表：User/Address/DailyUsage/Photo/Model/Order/OrderItem）
+  - Koa2 服务入口 + 中间件（JWT 鉴权、错误处理、请求日志）
+  - 用户服务：微信 code2Session 登录、手机号快速验证绑定、个人信息 CRUD
+  - 地址服务：CRUD + 默认地址管理
+  - 统一 API 格式：`{ code: 0, data: {}, message: "" }`
+- **新建文件**:
+  - `server/prisma/schema.prisma`
+  - `server/src/app.ts`
+  - `server/src/types/index.ts`
+  - `server/src/middlewares/auth.ts`、`error.ts`、`logger.ts`
+  - `server/src/services/user.ts`、`address.ts`
+  - `server/src/routes/user.ts`、`address.ts`
+
+### 研发-B — 前端个人信息 & 地址管理
+- **工作内容**:
+  - 个人信息编辑页（头像/昵称/手机号绑定）
+  - 收货地址列表页（展示/设默认/编辑/删除）
+  - 收货地址编辑页（新增/编辑表单+省市区选择器+删除）
+- **新建文件**:
+  - `miniprogram/pages/profile-edit/`（wxml/wxss/ts/json）
+  - `miniprogram/pages/address-list/`（wxml/wxss/ts/json）
+  - `miniprogram/pages/address-edit/`（wxml/wxss/ts/json）
+
+### 研发-C — 前端页面 UI
+- **工作内容**:
+  - 欢迎页（品牌展示+微信登录按钮+协议勾选）
+  - 首页（Banner轮播+开始定制入口+制作流程图+精选展示）
+  - 个人中心（用户卡片+订单快捷入口+模型缩略+功能列表+退出登录）
+  - 定制Tab占位页
+  - Tab栏配置（首页/定制/我的）
+- **新建文件**:
+  - `miniprogram/pages/welcome/`（wxml/wxss/ts/json）
+  - `miniprogram/pages/home/`（wxml/wxss/ts/json）
+  - `miniprogram/pages/profile/`（wxml/wxss/ts/json）
+  - `miniprogram/pages/customize/`（wxml/wxss/ts/json）
+
+### 公共文件
+- `miniprogram/app.ts` — 小程序入口
+- `miniprogram/app.json` — 页面路由+Tab栏
+- `miniprogram/app.wxss` — 全局样式+CSS变量
+- `miniprogram/utils/request.ts` — 网络请求封装
+- `miniprogram/utils/auth.ts` — 登录态管理
+- `miniprogram/utils/storage.ts` — 本地缓存工具
+- `miniprogram/package.json` — 前端依赖（TDesign/MobX）
+- `server/package.json`、`server/tsconfig.json`、`server/.env.example`
+- `README.md` — 项目说明
