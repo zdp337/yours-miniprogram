@@ -1,0 +1,44 @@
+<!-- 生成失败页 — Yours·凝刻 -->
+<view class="failed-page">
+  <!-- 失败图标 -->
+  <view class="icon-section">
+    <view class="fail-icon-wrap">
+      <text class="fail-emoji">😔</text>
+    </view>
+    <text class="fail-title">生成未成功</text>
+  </view>
+
+  <!-- 失败原因 -->
+  <view class="reason-card">
+    <text class="reason-icon">💡</text>
+    <view class="reason-content">
+      <text class="reason-label">可能的原因：</text>
+      <text class="reason-text">{{failReason}}</text>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-section">
+    <button 
+      class="btn-retry {{retryDisabled ? 'disabled' : ''}}" 
+      bindtap="onRetry"
+      disabled="{{retryDisabled}}"
+    >
+      <text>🔄 重新尝试</text>
+    </button>
+
+    <button class="btn-reupload" bindtap="onReupload">
+      <text>📸 更换照片</text>
+    </button>
+
+    <view class="guide-link" bindtap="goToGuide">
+      <text>📖 查看拍照指南</text>
+    </view>
+  </view>
+
+  <!-- 重试次数提示 -->
+  <view class="retry-info">
+    <text wx:if="{{!retryDisabled}}">剩余重试次数：{{3 - retryCount}}/3</text>
+    <text wx:else class="retry-exceeded">重试次数已达上限，请更换照片再试</text>
+  </view>
+</view>

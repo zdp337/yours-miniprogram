@@ -1,0 +1,81 @@
+<!-- 照片上传页 — Yours·凝刻 -->
+<view class="upload-page">
+  <!-- 顶部次数提示 -->
+  <view class="usage-bar">
+    <text class="usage-text">今日剩余 {{remainCount}}/{{dailyLimit}} 次</text>
+  </view>
+
+  <!-- 上传区域 -->
+  <view class="upload-section">
+    <view 
+      class="upload-area {{remainCount <= 0 ? 'disabled' : ''}}" 
+      bindtap="onUploadTap"
+    >
+      <block wx:if="{{remainCount > 0}}">
+        <view class="upload-icon-wrap">
+          <text class="upload-icon">+</text>
+        </view>
+        <text class="upload-title">点击上传全身照片</text>
+        <text class="upload-hint">支持 JPG/PNG，≤20MB</text>
+      </block>
+      <block wx:else>
+        <view class="upload-icon-wrap disabled-icon">
+          <text class="upload-icon">⏳</text>
+        </view>
+        <text class="upload-title disabled-text">今日免费次数已用完</text>
+        <text class="upload-hint">明天再来试试吧~</text>
+      </block>
+    </view>
+  </view>
+
+  <!-- 历史照片 -->
+  <view class="history-section" wx:if="{{photoList.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">历史照片</text>
+      <text class="section-count">{{photoList.length}}张</text>
+    </view>
+    <scroll-view scroll-x class="history-scroll" enhanced show-scrollbar="{{false}}">
+      <view class="history-list">
+        <view 
+          class="history-item" 
+          wx:for="{{photoList}}" 
+          wx:key="id"
+          bindtap="onHistoryTap"
+          bindlongpress="onHistoryLongPress"
+          data-index="{{index}}"
+          data-id="{{item.id}}"
+        >
+          <image 
+            class="history-img" 
+            src="{{item.croppedUrl || item.originalUrl}}" 
+            mode="aspectFill"
+          />
+          <text class="history-date">{{item.dateStr}}</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 查看拍照指南入口 -->
+  <view class="guide-link" bindtap="goToGuide">
+    <text class="guide-link-icon">📸</text>
+    <text class="guide-link-text">查看拍照指南</text>
+  </view>
+</view>
+
+<!-- 底部选择面板 -->
+<view class="action-sheet-mask {{showActionSheet ? 'show' : ''}}" bindtap="hideActionSheet">
+  <view class="action-sheet {{showActionSheet ? 'show' : ''}}" catchtap="">
+    <view class="action-sheet-item" bindtap="takePhoto">
+      <text class="action-sheet-icon">📷</text>
+      <text class="action-sheet-text">拍照</text>
+    </view>
+    <view class="action-sheet-item" bindtap="chooseFromAlbum">
+      <text class="action-sheet-icon">🖼</text>
+      <text class="action-sheet-text">从相册选择</text>
+    </view>
+    <view class="action-sheet-cancel" bindtap="hideActionSheet">
+      <text>取消</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,85 @@
+<!-- 退款申请页 — Yours·凝刻 -->
+<view class="refund-page">
+  <scroll-view scroll-y class="scroll-area" enhanced show-scrollbar="{{false}}">
+    <!-- 订单信息 -->
+    <view class="section order-info">
+      <view class="info-row">
+        <text class="info-label">订单编号</text>
+        <text class="info-value">{{orderNo}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">实付金额</text>
+        <text class="info-value price">¥{{payPrice}}</text>
+      </view>
+    </view>
+
+    <!-- 退款原因 -->
+    <view class="section">
+      <view class="section-title">退款原因（必选）</view>
+      <view class="reason-list">
+        <view
+          class="reason-item {{selectedReason === item.id ? 'reason-active' : ''}}"
+          wx:for="{{reasons}}"
+          wx:key="id"
+          bindtap="onReasonSelect"
+          data-id="{{item.id}}"
+        >
+          <view class="reason-radio {{selectedReason === item.id ? 'radio-checked' : ''}}">
+            <view wx:if="{{selectedReason === item.id}}" class="radio-dot"></view>
+          </view>
+          <text>{{item.label}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 退款说明 -->
+    <view class="section">
+      <view class="section-title">退款说明</view>
+      <textarea
+        class="desc-input"
+        placeholder="请描述您的退款原因..."
+        maxlength="200"
+        value="{{description}}"
+        bindinput="onDescInput"
+      />
+      <text class="desc-count">{{description.length}}/200</text>
+    </view>
+
+    <!-- 上传凭证 -->
+    <view class="section">
+      <view class="section-title">上传凭证（质量问题必填）</view>
+      <view class="photo-list">
+        <view class="photo-item" wx:for="{{photos}}" wx:key="index">
+          <image src="{{item}}" mode="aspectFill" class="photo-img" />
+          <view class="photo-del" catchtap="onDeletePhoto" data-index="{{index}}">×</view>
+        </view>
+        <view wx:if="{{photos.length < 3}}" class="photo-add" bindtap="onAddPhoto">
+          <text class="add-icon">+</text>
+          <text class="add-text">添加照片</text>
+        </view>
+      </view>
+      <text class="photo-tip">最多上传3张照片</text>
+    </view>
+
+    <!-- 退款须知 -->
+    <view class="section notice-section">
+      <view class="notice-title">⚠️ 退款须知</view>
+      <view class="notice-item">· 审核预计1-3个工作日</view>
+      <view class="notice-item">· 退款将原路退回微信支付</view>
+      <view class="notice-item">· 定制品已开始制作不支持退款</view>
+    </view>
+
+    <!-- 底部留白 -->
+    <view style="height: 160rpx;"></view>
+  </scroll-view>
+
+  <!-- 底部提交按钮 -->
+  <view class="submit-bar safe-area-bottom">
+    <view
+      class="submit-btn {{!selectedReason ? 'submit-disabled' : ''}}"
+      bindtap="onSubmit"
+    >
+      提交退款申请
+    </view>
+  </view>
+</view>

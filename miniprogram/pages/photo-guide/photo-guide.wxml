@@ -1,0 +1,118 @@
+<!-- 拍照引导页 — Yours·凝刻 -->
+<view class="guide-page">
+  <!-- 顶部标题 -->
+  <view class="header-section">
+    <text class="header-icon">📸</text>
+    <text class="header-title">如何拍出好照片</text>
+    <text class="header-desc">好的照片 = 好的手办效果</text>
+  </view>
+
+  <scroll-view scroll-y class="scroll-area" enhanced show-scrollbar="{{false}}">
+    <!-- 正确示范 -->
+    <view class="section">
+      <view class="section-header">
+        <view class="section-badge correct">✅</view>
+        <text class="section-title">正确示范</text>
+      </view>
+      <view class="example-grid correct-grid">
+        <view class="example-card correct-card">
+          <view class="example-img-wrap">
+            <text class="example-emoji">🧍</text>
+          </view>
+          <text class="example-label">全身正面站立</text>
+          <text class="example-sublabel">清晰可见头顶到脚底</text>
+        </view>
+        <view class="example-card correct-card">
+          <view class="example-img-wrap">
+            <text class="example-emoji">☀️</text>
+          </view>
+          <text class="example-label">光线充足</text>
+          <text class="example-sublabel">背景简洁、纯色最佳</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 错误示范 -->
+    <view class="section">
+      <view class="section-header">
+        <view class="section-badge wrong">❌</view>
+        <text class="section-title">错误示范</text>
+      </view>
+      <scroll-view scroll-x class="wrong-scroll" enhanced show-scrollbar="{{false}}">
+        <view class="wrong-list">
+          <view class="wrong-card">
+            <view class="wrong-img-wrap">
+              <text class="wrong-emoji">👤</text>
+            </view>
+            <text class="wrong-label">只有半身</text>
+          </view>
+          <view class="wrong-card">
+            <view class="wrong-img-wrap">
+              <text class="wrong-emoji">🌑</text>
+            </view>
+            <text class="wrong-label">逆光过暗</text>
+          </view>
+          <view class="wrong-card">
+            <view class="wrong-img-wrap">
+              <text class="wrong-emoji">🏚️</text>
+            </view>
+            <text class="wrong-label">背景杂乱</text>
+          </view>
+          <view class="wrong-card">
+            <view class="wrong-img-wrap">
+              <text class="wrong-emoji">👥</text>
+            </view>
+            <text class="wrong-label">多人合照</text>
+          </view>
+          <view class="wrong-card">
+            <view class="wrong-img-wrap">
+              <text class="wrong-emoji">🙈</text>
+            </view>
+            <text class="wrong-label">遮挡过多</text>
+          </view>
+        </view>
+      </scroll-view>
+      <text class="scroll-hint">← 左右滑动查看更多 →</text>
+    </view>
+
+    <!-- 拍照要点 -->
+    <view class="section tips-section">
+      <view class="section-header">
+        <text class="section-title">拍照要点</text>
+      </view>
+      <view class="tips-list">
+        <view class="tip-item">
+          <text class="tip-check">✓</text>
+          <text class="tip-text">确保全身入镜，头顶到脚底</text>
+        </view>
+        <view class="tip-item">
+          <text class="tip-check">✓</text>
+          <text class="tip-text">正面面对镜头，表情自然</text>
+        </view>
+        <view class="tip-item">
+          <text class="tip-check">✓</text>
+          <text class="tip-text">光线充足均匀，避免逆光</text>
+        </view>
+        <view class="tip-item">
+          <text class="tip-check">✓</text>
+          <text class="tip-text">背景简洁，纯色墙面最佳</text>
+        </view>
+        <view class="tip-item">
+          <text class="tip-check">✓</text>
+          <text class="tip-text">一人入镜，不要有遮挡</text>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 底部操作区 -->
+  <view class="bottom-area">
+    <view class="no-more-wrap" bindtap="toggleNoMore">
+      <view class="checkbox {{noMore ? 'checked' : ''}}">
+        <text wx:if="{{noMore}}" class="check-icon">✓</text>
+      </view>
+      <text class="no-more-text">不再提示</text>
+    </view>
+    <button class="start-btn" bindtap="goToUpload">我知道了，开始上传</button>
+  </view>
+</view>

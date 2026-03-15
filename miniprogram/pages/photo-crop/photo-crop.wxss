@@ -1,0 +1,172 @@
+/* 照片裁剪页样式 — Yours·凝刻 */
+
+.crop-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #1A1A1A;
+}
+
+/* 裁剪区域 */
+.crop-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32rpx;
+  position: relative;
+}
+
+.crop-bg {
+  width: 100%;
+  height: 0;
+  padding-bottom: 133%; /* 3:5 宽高比近似 */
+  position: relative;
+  border-radius: 16rpx;
+  overflow: hidden;
+}
+
+.movable-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.movable-view {
+  width: 100%;
+  height: 100%;
+}
+
+.crop-image {
+  width: 100%;
+  transition: transform 0.3s;
+}
+
+/* 裁剪框遮罩 */
+.crop-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.crop-frame {
+  position: absolute;
+  top: 5%;
+  left: 5%;
+  right: 5%;
+  bottom: 5%;
+  border: 2rpx solid rgba(255, 255, 255, 0.6);
+}
+
+.frame-corner {
+  position: absolute;
+  width: 32rpx;
+  height: 32rpx;
+}
+
+.frame-corner::before,
+.frame-corner::after {
+  content: '';
+  position: absolute;
+  background: #FFFFFF;
+}
+
+.top-left { top: -2rpx; left: -2rpx; }
+.top-left::before { top: 0; left: 0; width: 32rpx; height: 4rpx; }
+.top-left::after { top: 0; left: 0; width: 4rpx; height: 32rpx; }
+
+.top-right { top: -2rpx; right: -2rpx; }
+.top-right::before { top: 0; right: 0; width: 32rpx; height: 4rpx; }
+.top-right::after { top: 0; right: 0; width: 4rpx; height: 32rpx; }
+
+.bottom-left { bottom: -2rpx; left: -2rpx; }
+.bottom-left::before { bottom: 0; left: 0; width: 32rpx; height: 4rpx; }
+.bottom-left::after { bottom: 0; left: 0; width: 4rpx; height: 32rpx; }
+
+.bottom-right { bottom: -2rpx; right: -2rpx; }
+.bottom-right::before { bottom: 0; right: 0; width: 32rpx; height: 4rpx; }
+.bottom-right::after { bottom: 0; right: 0; width: 4rpx; height: 32rpx; }
+
+.crop-tip {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 20rpx;
+}
+
+/* 工具栏 */
+.toolbar {
+  display: flex;
+  justify-content: center;
+  gap: 80rpx;
+  padding: 24rpx 0;
+}
+
+.tool-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tool-icon {
+  font-size: 44rpx;
+  margin-bottom: 8rpx;
+}
+
+.tool-label {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* 底部按钮 */
+.bottom-btns {
+  display: flex;
+  gap: 24rpx;
+  padding: 24rpx 32rpx;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+}
+
+.btn-secondary {
+  flex: 1;
+  height: 88rpx;
+  line-height: 88rpx;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+  font-size: 30rpx;
+  border-radius: 44rpx;
+  border: none;
+}
+
+.btn-secondary::after {
+  border: none;
+}
+
+.btn-primary {
+  flex: 1;
+  height: 88rpx;
+  line-height: 88rpx;
+  text-align: center;
+  background: linear-gradient(135deg, #FF6B35 0%, #FF8F66 100%);
+  color: #FFFFFF;
+  font-size: 30rpx;
+  font-weight: 600;
+  border-radius: 44rpx;
+  border: none;
+}
+
+.btn-primary::after {
+  border: none;
+}
+
+/* 隐藏 canvas */
+.crop-canvas {
+  position: fixed;
+  left: -9999px;
+  top: -9999px;
+}

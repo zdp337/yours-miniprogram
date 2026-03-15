@@ -1,0 +1,55 @@
+<!-- 支付成功页 — Yours·凝刻 -->
+<view class="success-page">
+  <!-- 成功图标 -->
+  <view class="success-header">
+    <view class="success-icon">✅</view>
+    <text class="success-title">支付成功！</text>
+  </view>
+
+  <!-- 订单信息 -->
+  <view class="order-info-card">
+    <view class="info-row">
+      <text class="info-label">订单编号</text>
+      <text class="info-value">{{orderNo}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">支付金额</text>
+      <text class="info-value price">¥{{payPrice}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">支付时间</text>
+      <text class="info-value">{{payTime}}</text>
+    </view>
+  </view>
+
+  <!-- 制作提示 -->
+  <view class="tip-card">
+    <text class="tip-emoji">🎉</text>
+    <text class="tip-title">恭喜！你的手办订单已提交成功</text>
+    <text class="tip-desc">我们将在 7-15 个工作日内完成制作并发货，届时会通过微信通知你。</text>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-area">
+    <view class="action-btn action-primary" bindtap="goToOrderDetail">
+      📋 查看订单详情
+    </view>
+    <view class="action-btn action-secondary" bindtap="goToCustomize">
+      ✨ 继续定制新手办
+    </view>
+    <view class="action-link" bindtap="goToHome">
+      🏠 返回首页
+    </view>
+  </view>
+
+  <!-- 分享区域 -->
+  <view class="share-area">
+    <view class="share-divider">
+      <view class="share-line"></view>
+      <text class="share-text">分享给好友</text>
+      <view class="share-line"></view>
+    </view>
+    <text class="share-desc">把你的手办分享给朋友吧！</text>
+    <button class="share-btn" open-type="share">📤 分享</button>
+  </view>
+</view>

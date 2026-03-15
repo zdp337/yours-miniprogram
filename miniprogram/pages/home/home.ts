@@ -29,12 +29,13 @@ Page({
 
   /** 跳转到拍照/上传页面 */
   goToCreate() {
-    // 迭代2实现，当前跳转占位页
-    wx.showToast({
-      title: '功能即将上线',
-      icon: 'none',
-      duration: 1500,
-    });
+    // 检查是否跳过引导
+    const skip = wx.getStorageSync('photo_guide_skip');
+    if (skip) {
+      wx.navigateTo({ url: '/pages/photo-upload/photo-upload' });
+    } else {
+      wx.navigateTo({ url: '/pages/photo-guide/photo-guide' });
+    }
   },
 
   /** 下拉刷新 */

@@ -1,0 +1,136 @@
+<!-- 3D模型预览页 — Yours·凝刻 -->
+<view class="preview-page">
+  <!-- 自定义导航栏 -->
+  <view class="nav-bar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-content">
+      <view class="nav-back" bindtap="goBack">
+        <text class="back-icon">←</text>
+        <text class="back-text">我的手办</text>
+      </view>
+      <view class="nav-share" bindtap="onShareTap">
+        <text>📤</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 3D 模型渲染区域 -->
+  <view class="model-area" style="padding-top: {{navHeight}}px;">
+    <!-- WebGL Canvas -->
+    <canvas 
+      type="webgl"
+      id="modelCanvas"
+      class="model-canvas"
+      bindtouchstart="onTouchStart"
+      bindtouchmove="onTouchMove"
+      bindtouchend="onTouchEnd"
+    ></canvas>
+
+    <!-- Loading 骨架屏 -->
+    <view class="loading-overlay" wx:if="{{loading}}">
+      <view class="loading-spinner">
+        <view class="spinner-ring"></view>
+      </view>
+      <text class="loading-text">模型加载中...</text>
+      <view class="loading-progress" wx:if="{{loadProgress > 0}}">
+        <view class="progress-bar-bg">
+          <view class="progress-bar-fill" style="width: {{loadProgress}}%;"></view>
+        </view>
+        <text class="progress-num">{{loadProgress}}%</text>
+      </view>
+    </view>
+
+    <!-- 加载失败 -->
+    <view class="error-overlay" wx:if="{{loadError}}">
+      <text class="error-emoji">😢</text>
+      <text class="error-title">模型加载失败</text>
+      <text class="error-desc">{{loadErrorMsg}}</text>
+      <view class="error-btn" bindtap="reloadModel">
+        <text>重新加载</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 首次手势引导蒙层 -->
+  <view class="guide-overlay" wx:if="{{showGuide}}" bindtap="dismissGuide">
+    <view class="guide-content">
+      <view class="guide-item {{guideStep >= 1 ? 'active' : ''}}">
+        <text class="guide-icon">🔄</text>
+        <text class="guide-label">滑动旋转，查看全角度</text>
+      </view>
+      <view class="guide-item {{guideStep >= 2 ? 'active' : ''}}">
+        <text class="guide-icon">🔍</text>
+        <text class="guide-label">双指缩放，查看细节</text>
+      </view>
+      <view class="guide-item {{guideStep >= 3 ? 'active' : ''}}">
+        <text class="guide-icon">👆</text>
+        <text class="guide-label">双击重置视角</text>
+      </view>
+      <view class="guide-skip">
+        <text>点击任意处开始体验</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作区 -->
+  <view class="bottom-actions safe-area-bottom" wx:if="{{!loading && !loadError}}">
+    <!-- 功能按钮行 -->
+    <view class="action-row">
+      <view class="action-item" bindtap="onExportModel">
+        <text class="action-icon">📥</text>
+        <text class="action-label">导出模型</text>
+      </view>
+      <view class="action-item" bindtap="onRegenerate">
+        <text class="action-icon">🔄</text>
+        <text class="action-label">重新生成</text>
+      </view>
+    </view>
+    <!-- 主按钮 -->
+    <view class="main-btn" bindtap="goToCustomize">
+      <text>✨ 定制我的手办</text>
+    </view>
+  </view>
+
+  <!-- 分享面板 -->
+  <view class="share-mask" wx:if="{{showSharePanel}}" bindtap="closeSharePanel">
+    <view class="share-panel" catchtap="">
+      <text class="share-title">分享手办</text>
+      <view class="share-options">
+        <button class="share-item" open-type="share">
+          <text class="share-item-icon">💬</text>
+          <text class="share-item-label">发送给好友</text>
+        </button>
+        <view class="share-item" bindtap="generatePoster">
+          <text class="share-item-icon">🖼</text>
+          <text class="share-item-label">生成海报</text>
+        </view>
+      </view>
+      <view class="share-cancel" bindtap="closeSharePanel">
+        <text>取消</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 导出弹窗 -->
+  <view class="share-mask" wx:if="{{showExportPanel}}" bindtap="closeExportPanel">
+    <view class="share-panel" catchtap="">
+      <text class="share-title">导出 3D 模型文件</text>
+      <view class="export-info">
+        <text class="export-line">📁 模型格式：glTF (.glb)</text>
+        <text class="export-line">📊 文件大小：约 {{modelFileSize}}MB</text>
+      </view>
+      <view class="share-options">
+        <view class="share-item" bindtap="saveToPhone">
+          <text class="share-item-icon">💾</text>
+          <text class="share-item-label">保存到手机</text>
+        </view>
+        <view class="share-item" bindtap="sendViaWechat">
+          <text class="share-item-icon">📤</text>
+          <text class="share-item-label">通过微信发送</text>
+        </view>
+      </view>
+      <view class="share-cancel" bindtap="closeExportPanel">
+        <text>取消</text>
+      </view>
+    </view>
+  </view>
+</view>

@@ -6,7 +6,20 @@
     "pages/profile/profile",
     "pages/profile-edit/profile-edit",
     "pages/address-list/address-list",
-    "pages/address-edit/address-edit"
+    "pages/address-edit/address-edit",
+    "pages/photo-guide/photo-guide",
+    "pages/photo-upload/photo-upload",
+    "pages/photo-crop/photo-crop",
+    "pages/generate-waiting/generate-waiting",
+    "pages/generate-failed/generate-failed",
+    "pages/model-preview/model-preview",
+    "pages/model-list/model-list",
+    "pages/product-customize/product-customize",
+    "pages/order-confirm/order-confirm",
+    "pages/order-success/order-success",
+    "pages/order-detail/order-detail",
+    "pages/order-list/order-list",
+    "pages/refund-apply/refund-apply"
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",

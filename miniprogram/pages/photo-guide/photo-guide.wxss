@@ -1,0 +1,274 @@
+/* 拍照引导页样式 — Yours·凝刻 */
+
+.guide-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--bg-color);
+}
+
+/* 顶部标题 */
+.header-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40rpx 32rpx 24rpx;
+  background: #FFFFFF;
+}
+
+.header-icon {
+  font-size: 80rpx;
+  margin-bottom: 16rpx;
+}
+
+.header-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #333333;
+  margin-bottom: 8rpx;
+}
+
+.header-desc {
+  font-size: 26rpx;
+  color: #999999;
+}
+
+/* 滚动区域 */
+.scroll-area {
+  flex: 1;
+  overflow: hidden;
+}
+
+/* 通用 section */
+.section {
+  padding: 32rpx;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.section-badge {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  margin-right: 12rpx;
+}
+
+.section-badge.correct {
+  background: rgba(7, 193, 96, 0.1);
+}
+
+.section-badge.wrong {
+  background: rgba(238, 10, 36, 0.1);
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333333;
+}
+
+/* 正确示范 */
+.example-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20rpx;
+}
+
+.example-card {
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.correct-card {
+  border: 2rpx solid rgba(7, 193, 96, 0.2);
+}
+
+.example-img-wrap {
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 16rpx;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16rpx;
+}
+
+.example-emoji {
+  font-size: 80rpx;
+}
+
+.example-label {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 4rpx;
+}
+
+.example-sublabel {
+  font-size: 22rpx;
+  color: #999999;
+  text-align: center;
+}
+
+/* 错误示范 */
+.wrong-scroll {
+  white-space: nowrap;
+  width: 100%;
+}
+
+.wrong-list {
+  display: inline-flex;
+  gap: 16rpx;
+  padding: 4rpx 0;
+}
+
+.wrong-card {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  width: 160rpx;
+  flex-shrink: 0;
+}
+
+.wrong-img-wrap {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 16rpx;
+  background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12rpx;
+  border: 2rpx solid rgba(238, 10, 36, 0.15);
+}
+
+.wrong-emoji {
+  font-size: 56rpx;
+}
+
+.wrong-label {
+  font-size: 24rpx;
+  color: #666666;
+  white-space: nowrap;
+}
+
+.scroll-hint {
+  display: block;
+  text-align: center;
+  font-size: 22rpx;
+  color: #CCCCCC;
+  margin-top: 12rpx;
+}
+
+/* 拍照要点 */
+.tips-section {
+  padding-bottom: 200rpx;
+}
+
+.tips-list {
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 24rpx 32rpx;
+}
+
+.tip-item {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 0;
+}
+
+.tip-item + .tip-item {
+  border-top: 1rpx solid #F5F5F5;
+}
+
+.tip-check {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background: var(--accent-color);
+  color: #FFFFFF;
+  font-size: 24rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+}
+
+.tip-text {
+  font-size: 28rpx;
+  color: #333333;
+}
+
+/* 底部操作区 */
+.bottom-area {
+  padding: 24rpx 48rpx;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+  background: #FFFFFF;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.05);
+}
+
+.no-more-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20rpx;
+}
+
+.checkbox {
+  width: 32rpx;
+  height: 32rpx;
+  border: 2rpx solid #CCCCCC;
+  border-radius: 50%;
+  margin-right: 10rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.checkbox.checked {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+.check-icon {
+  font-size: 20rpx;
+  color: #FFFFFF;
+}
+
+.no-more-text {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.start-btn {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  text-align: center;
+  background: #333333;
+  color: #FFFFFF;
+  font-size: 32rpx;
+  font-weight: 600;
+  border-radius: 44rpx;
+  border: none;
+}
+
+.start-btn::after {
+  border: none;
+}

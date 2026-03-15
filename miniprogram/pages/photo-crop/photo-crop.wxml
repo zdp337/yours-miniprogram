@@ -1,0 +1,69 @@
+<!-- 照片裁剪页 — Yours·凝刻 -->
+<view class="crop-page">
+  <!-- 裁剪区域 -->
+  <view class="crop-container">
+    <view class="crop-bg">
+      <!-- 使用 movable-area + movable-view 实现拖拽缩放 -->
+      <movable-area class="movable-area" scale-area>
+        <movable-view
+          class="movable-view"
+          direction="all"
+          scale
+          scale-min="0.5"
+          scale-max="3"
+          x="{{imgX}}"
+          y="{{imgY}}"
+          bindchange="onImageMove"
+          bindscale="onImageScale"
+        >
+          <image 
+            class="crop-image" 
+            src="{{imageSrc}}" 
+            mode="widthFix"
+            style="transform: rotate({{rotation}}deg);"
+          />
+        </movable-view>
+      </movable-area>
+      <!-- 裁剪框遮罩 -->
+      <view class="crop-overlay">
+        <view class="crop-frame">
+          <view class="frame-corner top-left"></view>
+          <view class="frame-corner top-right"></view>
+          <view class="frame-corner bottom-left"></view>
+          <view class="frame-corner bottom-right"></view>
+        </view>
+      </view>
+    </view>
+    <text class="crop-tip">移动和缩放照片，调整到最佳位置</text>
+  </view>
+
+  <!-- 工具栏 -->
+  <view class="toolbar">
+    <view class="tool-item" bindtap="onRotate">
+      <text class="tool-icon">🔄</text>
+      <text class="tool-label">旋转</text>
+    </view>
+    <view class="tool-item" bindtap="onReset">
+      <text class="tool-icon">↩️</text>
+      <text class="tool-label">重置</text>
+    </view>
+    <view class="tool-item" bindtap="onToggleRatio">
+      <text class="tool-icon">📐</text>
+      <text class="tool-label">{{ratioText}}</text>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-btns">
+    <button class="btn-secondary" bindtap="onReselect">重新选择</button>
+    <button class="btn-primary" bindtap="onConfirm">确认使用</button>
+  </view>
+</view>
+
+<!-- Canvas 用于裁剪 (隐藏) -->
+<canvas 
+  type="2d" 
+  id="cropCanvas" 
+  class="crop-canvas"
+  style="width: {{canvasWidth}}px; height: {{canvasHeight}}px;"
+/>

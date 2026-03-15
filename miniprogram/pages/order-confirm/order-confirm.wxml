@@ -1,0 +1,108 @@
+<!-- 订单确认页 — Yours·凝刻 -->
+<view class="order-confirm-page">
+  <scroll-view scroll-y class="scroll-area" enhanced show-scrollbar="{{false}}">
+    <!-- 收货地址 -->
+    <view class="section address-section" bindtap="goToSelectAddress">
+      <view wx:if="{{address}}" class="address-card">
+        <view class="address-icon">📍</view>
+        <view class="address-info flex-1">
+          <view class="address-top">
+            <text class="address-name">{{address.name}}</text>
+            <text class="address-phone">{{address.phone}}</text>
+          </view>
+          <text class="address-detail">{{address.fullAddress}}</text>
+        </view>
+        <text class="arrow">›</text>
+      </view>
+      <view wx:else class="address-empty">
+        <view class="address-icon">📍</view>
+        <text class="address-empty-text">请添加收货地址</text>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+
+    <!-- 商品信息 -->
+    <view class="section goods-section">
+      <view class="section-title">🎁 商品信息</view>
+      <!-- 手办主商品 -->
+      <view class="goods-main">
+        <view class="goods-thumb">
+          <image wx:if="{{modelPreviewUrl}}" src="{{modelPreviewUrl}}" mode="aspectFill" class="thumb-img" />
+          <view wx:else class="thumb-placeholder">🎭</view>
+        </view>
+        <view class="goods-info flex-1">
+          <text class="goods-name">Q版手办（{{sizeLabel}}）</text>
+          <text class="goods-spec">{{material}} · {{sizeHeight}}</text>
+          <text class="goods-price">¥{{figurinePrice}}</text>
+        </view>
+        <text class="goods-qty">×1</text>
+      </view>
+      <!-- 附加商品 -->
+      <view class="goods-addon" wx:for="{{addons}}" wx:key="type">
+        <view class="addon-divider"></view>
+        <view class="addon-row">
+          <text class="addon-name">{{item.spec}}</text>
+          <text class="addon-price">¥{{item.priceText}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 订单备注 -->
+    <view class="section remark-section">
+      <view class="section-title">💬 订单备注</view>
+      <textarea
+        class="remark-input"
+        placeholder="选填，有特殊要求请备注"
+        maxlength="200"
+        value="{{remark}}"
+        bindinput="onRemarkInput"
+      />
+      <text class="remark-count">{{remark.length}}/200</text>
+    </view>
+
+    <!-- 价格明细 -->
+    <view class="section price-section">
+      <view class="section-title">💰 价格明细</view>
+      <view class="price-row">
+        <text>商品合计</text>
+        <text>¥{{totalPrice}}</text>
+      </view>
+      <view class="price-row" wx:if="{{discount !== '0.00'}}">
+        <text>套餐优惠</text>
+        <text class="price-discount">-¥{{discount}}</text>
+      </view>
+      <view class="price-row">
+        <text>运费</text>
+        <text>¥0.00</text>
+      </view>
+      <view class="price-divider"></view>
+      <view class="price-row price-total">
+        <text>应付金额</text>
+        <text class="price-pay">¥{{payPrice}}</text>
+      </view>
+      <view class="price-test-tip">⚠️ 当前为测试价</view>
+    </view>
+
+    <!-- 底部留白 -->
+    <view style="height: 180rpx;"></view>
+  </scroll-view>
+
+  <!-- 底部支付栏 -->
+  <view class="pay-bar safe-area-bottom">
+    <view
+      class="pay-btn {{!address ? 'pay-btn-disabled' : ''}}"
+      bindtap="onPay"
+    >
+      微信支付  ¥{{payPrice}}
+    </view>
+  </view>
+
+  <!-- 支付中遮罩 -->
+  <view class="pay-loading-mask" wx:if="{{paying}}">
+    <view class="pay-loading-box">
+      <view class="pay-loading-icon">⏳</view>
+      <text class="pay-loading-text">支付处理中</text>
+      <text class="pay-loading-tip">请勿离开...</text>
+    </view>
+  </view>
+</view>

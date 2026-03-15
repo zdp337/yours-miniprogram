@@ -1,0 +1,63 @@
+<!-- AI生成等待页 — Yours·凝刻 -->
+<view class="waiting-page">
+  <!-- 动画区域 -->
+  <view class="animation-section">
+    <view class="lottie-wrap">
+      <view class="pulse-ring ring-1"></view>
+      <view class="pulse-ring ring-2"></view>
+      <view class="pulse-ring ring-3"></view>
+      <view class="center-icon">
+        <text class="center-emoji">{{statusEmoji}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 状态文案 -->
+  <view class="status-section">
+    <text class="status-title">{{statusTitle}}</text>
+
+    <!-- 进度条 -->
+    <view class="progress-wrap" wx:if="{{status !== 'completed'}}">
+      <view class="progress-bar">
+        <view 
+          class="progress-fill {{status === 'generating' ? 'animating' : ''}}" 
+          style="width: {{progressPercent}}%;"
+        ></view>
+      </view>
+      <text class="progress-text">{{statusDesc}}</text>
+    </view>
+  </view>
+
+  <!-- 完成态 -->
+  <view class="complete-section" wx:if="{{status === 'completed'}}">
+    <button class="view-btn breathing" bindtap="goToPreview">
+      <text>✨ 立即查看</text>
+    </button>
+  </view>
+
+  <!-- 等待中的操作区 -->
+  <view class="waiting-actions" wx:if="{{status !== 'completed' && status !== 'failed'}}">
+    <view class="tip-card">
+      <text class="tip-icon">💡</text>
+      <view class="tip-content">
+        <text class="tip-title">小提示</text>
+        <text class="tip-desc">生成需要一点时间，你可以先去做其他事，生成完成后会通知你哦</text>
+      </view>
+    </view>
+
+    <button 
+      class="notify-btn {{subscribed ? 'subscribed' : ''}}" 
+      bindtap="onSubscribe"
+      wx:if="{{!subscribed}}"
+    >
+      <text>🔔 开启通知，完成后提醒我</text>
+    </button>
+    <view class="subscribed-text" wx:if="{{subscribed}}">
+      <text>✅ 已开启通知</text>
+    </view>
+
+    <view class="go-home-link" bindtap="goHome">
+      <text>先去逛逛 →</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,103 @@
+<!-- 我的订单列表页 — Yours·凝刻 -->
+<view class="order-list-page">
+  <!-- Tab 筛选 -->
+  <view class="tab-bar">
+    <view
+      class="tab-item {{currentTab === item.key ? 'tab-active' : ''}}"
+      wx:for="{{tabs}}"
+      wx:key="key"
+      bindtap="onTabChange"
+      data-key="{{item.key}}"
+    >
+      <text>{{item.label}}</text>
+      <view wx:if="{{currentTab === item.key}}" class="tab-indicator"></view>
+    </view>
+  </view>
+
+  <!-- 订单列表 -->
+  <scroll-view
+    scroll-y
+    class="order-scroll"
+    enhanced
+    show-scrollbar="{{false}}"
+    refresher-enabled
+    bindrefresherrefresh="onPullRefresh"
+    refresher-triggered="{{refreshing}}"
+    bindscrolltolower="onLoadMore"
+  >
+    <view wx:if="{{list.length > 0}}" class="order-list">
+      <view
+        class="order-card"
+        wx:for="{{list}}"
+        wx:key="id"
+        bindtap="goToDetail"
+        data-id="{{item.id}}"
+      >
+        <!-- 卡片头部 -->
+        <view class="card-header">
+          <text class="order-no">订单编号：{{item.orderNo}}</text>
+          <text class="order-status status-color-{{item.status}}">{{item.statusLabel}}</text>
+        </view>
+
+        <!-- 商品信息 -->
+        <view class="card-body">
+          <view class="card-thumb">
+            <image wx:if="{{item.modelPreviewUrl}}" src="{{item.modelPreviewUrl}}" mode="aspectFill" class="thumb-img" />
+            <view wx:else class="thumb-placeholder">🎭</view>
+          </view>
+          <view class="card-info flex-1">
+            <text class="card-goods-desc">Q版手办({{item.figurineSize}}){{item.itemSummary}}</text>
+            <text class="card-price">合计：¥{{item.payPriceText}}</text>
+          </view>
+        </view>
+
+        <!-- 卡片底部 -->
+        <view class="card-footer">
+          <text class="order-time">{{item.timeText}}</text>
+          <view class="card-actions" catchtap="preventBubble">
+            <!-- 待支付 -->
+            <block wx:if="{{item.status === 'pending_payment'}}">
+              <view class="card-btn card-btn-outline" catchtap="onCancelOrder" data-id="{{item.id}}">取消订单</view>
+              <view class="card-btn card-btn-primary" catchtap="onPayOrder" data-id="{{item.id}}">去支付</view>
+            </block>
+            <!-- 制作中 -->
+            <block wx:elif="{{item.status === 'producing'}}">
+              <button class="card-btn card-btn-outline" open-type="contact">联系客服</button>
+            </block>
+            <!-- 已发货 -->
+            <block wx:elif="{{item.status === 'shipped'}}">
+              <view class="card-btn card-btn-primary" catchtap="onConfirmReceive" data-id="{{item.id}}">确认收货</view>
+            </block>
+            <!-- 已完成 -->
+            <block wx:elif="{{item.status === 'completed'}}">
+              <view class="card-btn card-btn-outline" catchtap="onReorder" data-id="{{item.id}}" data-model-id="{{item.modelId}}">再来一单</view>
+            </block>
+            <!-- 已取消 -->
+            <block wx:elif="{{item.status === 'cancelled'}}">
+              <view class="card-btn card-btn-outline" catchtap="onReorder" data-id="{{item.id}}" data-model-id="{{item.modelId}}">重新下单</view>
+            </block>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载更多 -->
+    <view wx:if="{{loading}}" class="load-more">
+      <text>加载中...</text>
+    </view>
+    <view wx:if="{{noMore && list.length > 0}}" class="load-more">
+      <text>没有更多了</text>
+    </view>
+
+    <!-- 空状态 -->
+    <view wx:if="{{!loading && list.length === 0}}" class="empty-state">
+      <text class="empty-icon">📦</text>
+      <text class="empty-text">{{currentTab === 'all' ? '暂无订单' : '该状态下暂无订单'}}</text>
+      <text class="empty-tip">去定制你的第一个手办吧~</text>
+      <view class="empty-btn" bindtap="goToCustomize">去定制</view>
+    </view>
+
+    <!-- 底部安全区 -->
+    <view class="safe-area-bottom"></view>
+  </scroll-view>
+</view>

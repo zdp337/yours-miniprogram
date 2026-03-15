@@ -1,0 +1,382 @@
+/* 3D模型预览页样式 */
+
+.preview-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #F5F5F5 0%, #ECECEC 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 导航栏 */
+.nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: transparent;
+}
+
+.nav-content {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32rpx;
+}
+
+.nav-back {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.back-icon {
+  font-size: 36rpx;
+  color: #333;
+}
+
+.back-text {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.nav-share {
+  font-size: 36rpx;
+  padding: 16rpx;
+}
+
+/* 模型渲染区域 */
+.model-area {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.model-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* Loading */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(245, 245, 245, 0.95);
+  z-index: 10;
+}
+
+.loading-spinner {
+  width: 120rpx;
+  height: 120rpx;
+  position: relative;
+  margin-bottom: 32rpx;
+}
+
+.spinner-ring {
+  width: 100%;
+  height: 100%;
+  border: 6rpx solid #E5E5E5;
+  border-top-color: #333333;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 24rpx;
+}
+
+.loading-progress {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.progress-bar-bg {
+  width: 300rpx;
+  height: 8rpx;
+  background: #E5E5E5;
+  border-radius: 4rpx;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: #333;
+  border-radius: 4rpx;
+  transition: width 0.3s ease;
+}
+
+.progress-num {
+  font-size: 24rpx;
+  color: #999;
+  width: 60rpx;
+}
+
+/* 加载失败 */
+.error-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.error-emoji {
+  font-size: 100rpx;
+  margin-bottom: 24rpx;
+}
+
+.error-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12rpx;
+}
+
+.error-desc {
+  font-size: 26rpx;
+  color: #999;
+  margin-bottom: 40rpx;
+}
+
+.error-btn {
+  padding: 16rpx 48rpx;
+  background: #333;
+  color: #fff;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+}
+
+/* 手势引导蒙层 */
+.guide-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.guide-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48rpx;
+}
+
+.guide-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0;
+  animation: guideFadeIn 0.5s ease forwards;
+}
+
+.guide-item.active {
+  opacity: 1;
+}
+
+.guide-item:nth-child(1) { animation-delay: 0s; }
+.guide-item:nth-child(2) { animation-delay: 0.3s; }
+.guide-item:nth-child(3) { animation-delay: 0.6s; }
+
+@keyframes guideFadeIn {
+  from { opacity: 0; transform: translateY(20rpx); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.guide-icon {
+  font-size: 64rpx;
+  margin-bottom: 12rpx;
+}
+
+.guide-label {
+  font-size: 30rpx;
+  color: #fff;
+  font-weight: 500;
+}
+
+.guide-skip {
+  margin-top: 40rpx;
+  animation: guideFadeIn 0.5s ease 0.9s forwards;
+  opacity: 0;
+}
+
+.guide-skip text {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* 底部操作区 */
+.bottom-actions {
+  padding: 20rpx 32rpx;
+  background: #fff;
+  border-radius: 32rpx 32rpx 0 0;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.06);
+}
+
+.action-row {
+  display: flex;
+  justify-content: center;
+  gap: 80rpx;
+  margin-bottom: 20rpx;
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rpx;
+}
+
+.action-icon {
+  font-size: 40rpx;
+}
+
+.action-label {
+  font-size: 22rpx;
+  color: #666;
+}
+
+.main-btn {
+  width: 100%;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #333333;
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 600;
+  border-radius: 44rpx;
+  letter-spacing: 2rpx;
+}
+
+.main-btn:active {
+  opacity: 0.85;
+}
+
+/* 分享/导出面板 */
+.share-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 300;
+  display: flex;
+  align-items: flex-end;
+}
+
+.share-panel {
+  width: 100%;
+  background: #fff;
+  border-radius: 32rpx 32rpx 0 0;
+  padding: 40rpx 32rpx;
+  padding-bottom: calc(40rpx + env(safe-area-inset-bottom));
+}
+
+.share-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  display: block;
+  margin-bottom: 32rpx;
+}
+
+.export-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  padding: 24rpx;
+  background: #F5F5F5;
+  border-radius: 16rpx;
+  margin-bottom: 24rpx;
+}
+
+.export-line {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.share-options {
+  display: flex;
+  justify-content: center;
+  gap: 60rpx;
+  margin-bottom: 32rpx;
+}
+
+.share-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  line-height: normal;
+}
+
+.share-item::after {
+  border: none;
+}
+
+.share-item-icon {
+  width: 100rpx;
+  height: 100rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F5F5F5;
+  border-radius: 24rpx;
+  font-size: 40rpx;
+}
+
+.share-item-label {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.share-cancel {
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: 1rpx solid #E5E5E5;
+}
+
+.share-cancel text {
+  font-size: 28rpx;
+  color: #999;
+}

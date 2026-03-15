@@ -1,0 +1,71 @@
+<!-- 我的模型列表页 — Yours·凝刻 -->
+<view class="model-list-page">
+  <!-- 顶部提示 -->
+  <view class="usage-bar" wx:if="{{usageLoaded}}">
+    <text class="usage-text">今日剩余 {{remainUsage}}/{{maxUsage}}</text>
+  </view>
+
+  <!-- 模型网格 -->
+  <view class="model-grid" wx:if="{{list.length > 0}}">
+    <view 
+      class="model-card"
+      wx:for="{{list}}"
+      wx:key="id"
+      bindtap="onCardTap"
+      bindlongpress="onCardLongPress"
+      data-item="{{item}}"
+    >
+      <!-- 预览图 -->
+      <view class="card-image-wrap">
+        <image 
+          wx:if="{{item.previewUrl && item.status === 'completed'}}"
+          class="card-image" 
+          src="{{item.previewUrl}}" 
+          mode="aspectFill"
+        />
+        <!-- 生成中占位 -->
+        <view class="card-generating" wx:if="{{item.status === 'generating' || item.status === 'queued'}}">
+          <view class="gen-spinner"></view>
+          <text class="gen-text">生成中</text>
+          <text class="gen-sub">请稍候</text>
+        </view>
+        <!-- 失败占位 -->
+        <view class="card-failed" wx:if="{{item.status === 'failed'}}">
+          <text class="fail-icon">❌</text>
+          <text class="fail-text">生成失败</text>
+        </view>
+        <!-- 无预览图但已完成 -->
+        <view class="card-placeholder" wx:if="{{!item.previewUrl && item.status === 'completed'}}">
+          <text class="ph-icon">🎭</text>
+        </view>
+      </view>
+      <!-- 信息区 -->
+      <view class="card-info">
+        <text class="card-date">{{item.dateStr}}</text>
+        <view class="card-status">
+          <text class="status-dot {{item.status}}"></text>
+          <text class="status-text">{{item.statusText}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!loading && list.length === 0}}">
+    <text class="empty-emoji">🎨</text>
+    <text class="empty-title">还没有模型</text>
+    <text class="empty-desc">上传照片生成第一个手办吧~</text>
+    <view class="empty-btn" bindtap="goToUpload">
+      <text>去上传照片</text>
+    </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading-wrap" wx:if="{{loading}}">
+    <view class="loading-dot-group">
+      <view class="loading-dot"></view>
+      <view class="loading-dot"></view>
+      <view class="loading-dot"></view>
+    </view>
+  </view>
+</view>

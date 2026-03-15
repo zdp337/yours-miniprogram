@@ -1,0 +1,242 @@
+<!-- 产品定制页 — Yours·凝刻 -->
+<view class="customize-page">
+  <scroll-view scroll-y class="scroll-area" enhanced show-scrollbar="{{false}}">
+    <!-- 模型信息头部 -->
+    <view class="model-header card">
+      <view class="model-thumb-wrap">
+        <image 
+          wx:if="{{modelPreviewUrl}}" 
+          class="model-thumb" 
+          src="{{modelPreviewUrl}}" 
+          mode="aspectFill"
+        />
+        <view wx:else class="model-thumb-placeholder">
+          <text>🎭</text>
+        </view>
+      </view>
+      <view class="model-header-info">
+        <text class="model-header-title">我的Q版手办</text>
+        <text class="model-header-desc">基于照片生成</text>
+        <view class="model-header-link" bindtap="goBackPreview">
+          <text>查看3D预览 ›</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 推荐套餐 -->
+    <view class="section">
+      <view class="section-title">
+        <text>📦 推荐套餐</text>
+      </view>
+      <view class="package-list">
+        <view 
+          class="package-card {{selectedPackage === item.id ? 'selected' : ''}}"
+          wx:for="{{packages}}"
+          wx:key="id"
+          bindtap="onPackageSelect"
+          data-id="{{item.id}}"
+        >
+          <text class="package-emoji">{{item.emoji}}</text>
+          <text class="package-name">{{item.name}}</text>
+          <view class="package-recommend" wx:if="{{item.recommended}}">
+            <text>⭐推荐</text>
+          </view>
+          <view class="package-items">
+            <text class="package-item-text">手办{{item.figurineSize}}</text>
+            <block wx:for="{{item.addons}}" wx:for-item="addon" wx:key="type">
+              <text class="package-item-text">+{{addon.type === 'package_box' ? '包装盒' : addon.type === 'model_photo_print' ? (addon.printType === 'card' ? '卡片' : '亚克力') : '相纸'}}</text>
+            </block>
+          </view>
+          <view class="package-price-area">
+            <text class="package-price">¥{{item.price}}</text>
+            <text class="package-discount" wx:if="{{item.discount > 0}}">省¥{{item.discount}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 手办尺寸（必选） -->
+    <view class="section">
+      <view class="section-title">
+        <text>🎨 手办尺寸（必选）</text>
+      </view>
+      <view class="size-list">
+        <view 
+          class="size-card {{selectedSize === item.id ? 'selected' : ''}} {{!item.inStock ? 'disabled' : ''}}"
+          wx:for="{{sizes}}"
+          wx:key="id"
+          bindtap="onSizeSelect"
+          data-id="{{item.id}}"
+        >
+          <view class="size-radio">
+            <view class="radio-outer">
+              <view class="radio-inner" wx:if="{{selectedSize === item.id}}"></view>
+            </view>
+          </view>
+          <view class="size-info">
+            <view class="size-name-row">
+              <text class="size-name">{{item.name}}</text>
+              <text class="size-recommend" wx:if="{{item.recommended}}">⭐</text>
+              <text class="size-out" wx:if="{{!item.inStock}}">暂时缺货</text>
+            </view>
+            <text class="size-spec">{{item.height}} · ¥{{item.price}}</text>
+            <text class="size-desc">{{item.desc}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="material-note">
+        <text>材质：{{material}}（暂不可选）</text>
+      </view>
+    </view>
+
+    <!-- 可选周边 -->
+    <view class="section">
+      <view class="section-title">
+        <text>📸 可选周边</text>
+      </view>
+
+      <!-- 模型照片打印 -->
+      <view class="addon-card">
+        <view class="addon-header" bindtap="toggleAddon" data-key="modelPhotoPrint">
+          <text class="addon-name">模型照片打印</text>
+          <view class="addon-switch {{modelPhotoPrint ? 'on' : ''}}">
+            <view class="switch-handle"></view>
+          </view>
+        </view>
+        <view class="addon-content" wx:if="{{modelPhotoPrint}}">
+          <view class="print-types">
+            <view 
+              class="print-type-card {{modelPhotoPrintType === item.id ? 'selected' : ''}}"
+              wx:for="{{printTypes}}"
+              wx:key="id"
+              bindtap="onModelPrintTypeSelect"
+              data-id="{{item.id}}"
+            >
+              <text class="pt-icon">{{item.id === 'photo_paper' ? '📄' : item.id === 'card' ? '🃏' : '💎'}}</text>
+              <text class="pt-name">{{item.name}}</text>
+              <text class="pt-price">¥{{item.price}}</text>
+              <view class="pt-radio">
+                <view class="radio-outer-sm">
+                  <view class="radio-inner-sm" wx:if="{{modelPhotoPrintType === item.id}}"></view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 真人照片打印 -->
+      <view class="addon-card">
+        <view class="addon-header" bindtap="toggleAddon" data-key="originalPhotoPrint">
+          <text class="addon-name">真人照片打印</text>
+          <view class="addon-switch {{originalPhotoPrint ? 'on' : ''}}">
+            <view class="switch-handle"></view>
+          </view>
+        </view>
+        <view class="addon-content" wx:if="{{originalPhotoPrint}}">
+          <view class="print-types">
+            <view 
+              class="print-type-card {{originalPhotoPrintType === item.id ? 'selected' : ''}}"
+              wx:for="{{printTypes}}"
+              wx:key="id"
+              bindtap="onOriginalPrintTypeSelect"
+              data-id="{{item.id}}"
+            >
+              <text class="pt-icon">{{item.id === 'photo_paper' ? '📄' : item.id === 'card' ? '🃏' : '💎'}}</text>
+              <text class="pt-name">{{item.name}}</text>
+              <text class="pt-price">¥{{item.price}}</text>
+              <view class="pt-radio">
+                <view class="radio-outer-sm">
+                  <view class="radio-inner-sm" wx:if="{{originalPhotoPrintType === item.id}}"></view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 专属包装盒 -->
+      <view class="addon-card">
+        <view class="addon-header" bindtap="toggleAddon" data-key="packageBox">
+          <text class="addon-name">专属包装盒</text>
+          <view class="addon-switch {{packageBox ? 'on' : ''}}">
+            <view class="switch-handle"></view>
+          </view>
+        </view>
+        <view class="addon-content" wx:if="{{packageBox}}">
+          <text class="color-label">选择颜色：</text>
+          <view class="color-grid">
+            <view 
+              class="color-item {{boxColor === item.id ? 'selected' : ''}}"
+              wx:for="{{boxColors}}"
+              wx:key="id"
+              bindtap="onBoxColorSelect"
+              data-id="{{item.id}}"
+            >
+              <view class="color-swatch" style="background-color: {{item.hex}};"></view>
+              <text class="color-name">{{item.name}}</text>
+            </view>
+          </view>
+          <text class="box-price">¥{{boxPrice}}（测试价）</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部留空 -->
+    <view style="height: 200rpx;"></view>
+  </scroll-view>
+
+  <!-- 底部价格栏 -->
+  <view class="bottom-bar safe-area-bottom">
+    <view class="price-area" bindtap="showPriceDetail">
+      <text class="price-label">合计</text>
+      <text class="price-value">¥{{payPrice}}</text>
+      <text class="price-arrow">▲</text>
+    </view>
+    <view 
+      class="submit-btn {{!selectedSize ? 'disabled' : ''}}" 
+      bindtap="onSubmitOrder"
+    >
+      <text>提交订单</text>
+    </view>
+  </view>
+
+  <!-- 价格明细弹窗 -->
+  <view class="detail-mask" wx:if="{{showDetail}}" bindtap="hidePriceDetail">
+    <view class="detail-panel" catchtap="">
+      <view class="detail-header">
+        <text class="detail-title">价格明细</text>
+        <view class="detail-close" bindtap="hidePriceDetail">
+          <text>✕</text>
+        </view>
+      </view>
+      <view class="detail-items">
+        <view class="detail-row" wx:for="{{priceItems}}" wx:key="type">
+          <text class="detail-name">{{item.spec}}</text>
+          <text class="detail-price">¥{{item.price}}</text>
+        </view>
+      </view>
+      <view class="detail-divider"></view>
+      <view class="detail-row">
+        <text class="detail-name">商品合计</text>
+        <text class="detail-price">¥{{totalPrice}}</text>
+      </view>
+      <view class="detail-row" wx:if="{{discount > 0}}">
+        <text class="detail-name">套餐优惠</text>
+        <text class="detail-price discount">-¥{{discount}}</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-name">运费</text>
+        <text class="detail-price">¥0.00</text>
+      </view>
+      <view class="detail-divider thick"></view>
+      <view class="detail-row total">
+        <text class="detail-name">应付金额</text>
+        <text class="detail-price">¥{{payPrice}}</text>
+      </view>
+      <view class="test-note">
+        <text>⚠️ 当前为测试价，非真实售价</text>
+      </view>
+    </view>
+  </view>
+</view>

@@ -77,20 +77,22 @@ Page({
   /** 跳转订单列表 */
   goToOrderList(e: WechatMiniprogram.TouchEvent) {
     const status = e.currentTarget?.dataset?.status || '';
-    // 迭代4实现
-    wx.showToast({ title: '订单功能即将上线', icon: 'none' });
+    wx.navigateTo({
+      url: `/pages/order-list/order-list${status ? '?status=' + status : ''}`,
+    });
   },
 
   /** 跳转模型列表 */
   goToModelList() {
-    // 迭代3实现
-    wx.showToast({ title: '模型功能即将上线', icon: 'none' });
+    wx.navigateTo({ url: '/pages/model-list/model-list' });
   },
 
   /** 跳转模型详情 */
   goToModelDetail(e: WechatMiniprogram.TouchEvent) {
     const id = e.currentTarget?.dataset?.id;
-    wx.showToast({ title: '模型功能即将上线', icon: 'none' });
+    if (id) {
+      wx.navigateTo({ url: `/pages/model-preview/model-preview?modelId=${id}` });
+    }
   },
 
   /** 跳转地址列表 */
