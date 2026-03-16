@@ -1,6 +1,6 @@
 /**
  * 3D 模型路由 — Yours·凝刻
- * AI 生成 / 状态查询 / 重试 / 模型列表
+ * AI 生成 / 状态查询 / 重试 / 模型列表 / 引擎管理
  */
 
 import Router from 'koa-router';
@@ -10,16 +10,30 @@ import { AuthContext } from '../types';
 
 const router = new Router({ prefix: '/api/model' });
 
-// 所有接口需要登录
-router.use(authMiddleware);
+/**
+ * GET /api/model/engines
+ * 获取可用 AI 引擎列表（无需登录）
+ */
+router.get('/engines', async (ctx) => {
+  const engines = modelService.getAvailableEngines();
+  ctx.body = {
+    code: 0,
+    data: { engines },
+    message: 'success',
+  };
+});
 
 /**
  * POST /api/model/generate
  * 发起 AI 3D 模型生成
+ * body: { photoId: number, engine?: 'tripo' | 'hunyuan' }
  */
-router.post('/generate', async (ctx) => {
+router.post('/generate', authMiddleware, async (ctx) => {
   const { user } = (ctx as unknown as AuthContext).state;
-  const { photoId } = ctx.request.body as { photoId: number };
+  const { photoId, engine } = ctx.request.body as {
+    photoId: number;
+    engine?: 'tripo' | 'hunyuan';
+  };
 
   if (!photoId) {
     ctx.status = 400;
@@ -28,7 +42,7 @@ router.post('/generate', async (ctx) => {
   }
 
   try {
-    const result = await modelService.createGenerateTask(user.id, photoId);
+    const result = await modelService.createGenerateTask(user.id, photoId, engine);
     ctx.body = {
       code: 0,
       data: result,
@@ -51,7 +65,7 @@ router.post('/generate', async (ctx) => {
  * GET /api/model/:id/status
  * 查询模型生成状态（前端轮询）
  */
-router.get('/:id/status', async (ctx) => {
+router.get('/:id/status', authMiddleware, async (ctx) => {
   const { user } = (ctx as unknown as AuthContext).state;
   const modelId = parseInt(ctx.params.id, 10);
   const result = await modelService.getModelStatus(user.id, modelId);
@@ -65,14 +79,16 @@ router.get('/:id/status', async (ctx) => {
 
 /**
  * POST /api/model/:id/retry
- * 重试生成
+ * 重试生成（可选切换引擎）
+ * body: { engine?: 'tripo' | 'hunyuan' }
  */
-router.post('/:id/retry', async (ctx) => {
+router.post('/:id/retry', authMiddleware, async (ctx) => {
   const { user } = (ctx as unknown as AuthContext).state;
   const modelId = parseInt(ctx.params.id, 10);
+  const { engine } = (ctx.request.body || {}) as { engine?: 'tripo' | 'hunyuan' };
 
   try {
-    const result = await modelService.retryGenerate(user.id, modelId);
+    const result = await modelService.retryGenerate(user.id, modelId, engine);
     ctx.body = {
       code: 0,
       data: result,
@@ -103,7 +119,7 @@ router.post('/:id/retry', async (ctx) => {
  * GET /api/model/list
  * 获取用户模型列表
  */
-router.get('/list', async (ctx) => {
+router.get('/list', authMiddleware, async (ctx) => {
   const { user } = (ctx as unknown as AuthContext).state;
   const list = await modelService.getModelList(user.id);
 
@@ -118,7 +134,7 @@ router.get('/list', async (ctx) => {
  * GET /api/model/:id/detail
  * 获取模型详情
  */
-router.get('/:id/detail', async (ctx) => {
+router.get('/:id/detail', authMiddleware, async (ctx) => {
   const { user } = (ctx as unknown as AuthContext).state;
   const modelId = parseInt(ctx.params.id, 10);
   const result = await modelService.getModelDetail(user.id, modelId);
@@ -134,7 +150,7 @@ router.get('/:id/detail', async (ctx) => {
  * DELETE /api/model/:id
  * 删除模型
  */
-router.delete('/:id', async (ctx) => {
+router.delete('/:id', authMiddleware, async (ctx) => {
   const { user } = (ctx as unknown as AuthContext).state;
   const modelId = parseInt(ctx.params.id, 10);
 

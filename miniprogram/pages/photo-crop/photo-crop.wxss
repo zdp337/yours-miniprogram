@@ -20,11 +20,11 @@
 
 .crop-bg {
   width: 100%;
-  height: 0;
-  padding-bottom: 133%; /* 3:5 宽高比近似 */
+  height: 800rpx;
   position: relative;
   border-radius: 16rpx;
   overflow: hidden;
+  background: #000;
 }
 
 .movable-area {
@@ -33,11 +33,15 @@
   left: 0;
   width: 100%;
   height: 100%;
+  z-index: 1;
 }
 
 .movable-view {
   width: 100%;
   height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .crop-image {
@@ -53,6 +57,7 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
+  z-index: 2;
 }
 
 .crop-frame {

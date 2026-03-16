@@ -3,10 +3,12 @@
  */
 
 import Router from 'koa-router';
-import { authMiddleware } from '../middlewares/auth';
+import { authMiddleware, generateToken } from '../middlewares/auth';
 import * as userService from '../services/user';
 import { AuthContext } from '../types';
+import { PrismaClient } from '@prisma/client';
 
+const prisma = new PrismaClient();
 const router = new Router({ prefix: '/api/user' });
 
 /**
@@ -28,6 +30,44 @@ router.post('/login', async (ctx) => {
     code: 0,
     data: result,
     message: result.isNewUser ? '注册成功' : '登录成功',
+  };
+});
+
+/**
+ * POST /api/user/dev-login
+ * 开发模式免登录（仅测试环境使用，绕过微信 code2Session）
+ */
+router.post('/dev-login', async (ctx) => {
+  const devOpenId = 'dev_test_user_001';
+
+  // 查找或创建测试用户
+  let user = await prisma.user.findUnique({ where: { openId: devOpenId } });
+  if (!user) {
+    user = await prisma.user.create({
+      data: {
+        openId: devOpenId,
+        nickname: '测试用户',
+        avatarUrl: '',
+      },
+    });
+  }
+
+  const token = generateToken(Number(user.id), devOpenId);
+
+  ctx.body = {
+    code: 0,
+    data: {
+      token,
+      userInfo: {
+        id: Number(user.id),
+        openId: user.openId,
+        nickname: user.nickname || '测试用户',
+        avatarUrl: user.avatarUrl || '',
+        phone: user.phone || null,
+      },
+      isNewUser: false,
+    },
+    message: '开发模式登录成功',
   };
 });
 

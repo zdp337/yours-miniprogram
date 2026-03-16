@@ -1,4 +1,4 @@
-<!-- 生成失败页 — Yours·凝刻 -->
+<!-- 生成失败页 — Yours·凝刻（多引擎版） -->
 <view class="failed-page">
   <!-- 失败图标 -->
   <view class="icon-section">
@@ -6,6 +6,9 @@
       <text class="fail-emoji">😔</text>
     </view>
     <text class="fail-title">生成未成功</text>
+    <view class="engine-info">
+      <text class="engine-info-text">使用引擎：{{engineLabel}}</text>
+    </view>
   </view>
 
   <!-- 失败原因 -->
@@ -25,6 +28,14 @@
       disabled="{{retryDisabled}}"
     >
       <text>🔄 重新尝试</text>
+    </button>
+
+    <button 
+      class="btn-switch-engine {{retryDisabled ? 'disabled' : ''}}" 
+      bindtap="onSwitchEngineRetry"
+      disabled="{{retryDisabled}}"
+    >
+      <text>🔀 换 {{engine === 'tripo' ? '混元3D' : 'Tripo3D'}} 引擎试试</text>
     </button>
 
     <button class="btn-reupload" bindtap="onReupload">

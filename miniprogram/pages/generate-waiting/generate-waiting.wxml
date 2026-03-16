@@ -16,6 +16,11 @@
   <view class="status-section">
     <text class="status-title">{{statusTitle}}</text>
 
+    <!-- 引擎标签 -->
+    <view class="engine-tag" wx:if="{{status !== 'completed'}}">
+      <text class="engine-tag-text">{{engineLabel}} 引擎</text>
+    </view>
+
     <!-- 进度条 -->
     <view class="progress-wrap" wx:if="{{status !== 'completed'}}">
       <view class="progress-bar">

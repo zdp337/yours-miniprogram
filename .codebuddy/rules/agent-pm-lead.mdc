@@ -1,8 +1,8 @@
 ---
 description: 研发PM/组长 Agent - 负责模块拆分、迭代排期、代码审核、跨模块依赖管理和整体进度把控
-alwaysApply: false
+alwaysApply: true
 enabled: true
-updatedAt: 2026-03-03T08:58:24.085Z
+updatedAt: 2026-03-16T00:00:00.000Z
 provider: 
 ---
 

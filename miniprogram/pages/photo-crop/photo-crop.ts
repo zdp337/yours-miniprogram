@@ -1,6 +1,6 @@
 // 照片裁剪页 — Yours·凝刻
 
-import { post } from '../../utils/request';
+import { post, put } from '../../utils/request';
 
 Page({
   data: {
@@ -83,22 +83,34 @@ Page({
         const res = await post<{ id: number }>('/photo', {
           originalUrl,
           croppedUrl,
-        });
+        }, { silent401: true });
         photoId = res.data.id;
       } else {
         // 历史照片，只更新裁剪结果
         const croppedUrl = await this.uploadToServer(croppedPath);
-        await post(`/photo/${photoId}/crop`, { croppedUrl });
+        await put(`/photo/${photoId}/crop`, { croppedUrl }, { silent401: true });
       }
 
       wx.hideLoading();
 
-      // 跳转到生成等待页
-      wx.redirectTo({
-        url: `/pages/generate-waiting/generate-waiting?photoId=${photoId}`,
-      });
+      // 弹窗选择 AI 引擎
+      this.showEngineSelector(photoId);
     } catch (err: any) {
       wx.hideLoading();
+      // token 过期：提示用户重新登录
+      if (err.message === 'TOKEN_EXPIRED') {
+        wx.showModal({
+          title: '登录已过期',
+          content: '请重新登录后继续操作',
+          showCancel: false,
+          success: () => {
+            wx.removeStorageSync('token');
+            wx.removeStorageSync('userInfo');
+            wx.reLaunch({ url: '/pages/welcome/welcome' });
+          },
+        });
+        return;
+      }
       wx.showToast({ title: err.message || '处理失败', icon: 'none' });
     }
   },
@@ -185,6 +197,10 @@ Page({
             const data = JSON.parse(res.data);
             if (data.code === 0 && data.data?.url) {
               resolve(data.data.url);
+            } else if (res.statusCode === 401 || data.code === 401) {
+              // token 过期，抛出特定错误，由调用方统一处理
+              console.error('[Upload] 401 鉴权失败，token 可能已过期');
+              reject(new Error('TOKEN_EXPIRED'));
             } else {
               reject(new Error(data.message || '上传失败'));
             }
@@ -194,6 +210,24 @@ Page({
         },
         fail: () => reject(new Error('文件上传失败')),
       });
+    });
+  },
+
+  /** 弹窗选择 AI 引擎 */
+  showEngineSelector(photoId: number) {
+    wx.showActionSheet({
+      itemList: ['Tripo3D 引擎', '混元3D 引擎'],
+      success: (res) => {
+        const engines = ['tripo', 'hunyuan'];
+        const engine = engines[res.tapIndex] || 'tripo';
+        wx.redirectTo({
+          url: `/pages/generate-waiting/generate-waiting?photoId=${photoId}&engine=${engine}`,
+        });
+      },
+      fail: () => {
+        // 用户取消选择，不跳转，提示可重新点击确认
+        wx.showToast({ title: '已取消，可重新操作', icon: 'none' });
+      },
     });
   },
 });

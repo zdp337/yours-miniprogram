@@ -222,7 +222,7 @@ Page({
       if (pkgAddons.size === currentAddons.size) {
         let allMatch = true;
         pkgAddons.forEach((a) => {
-          if (!currentAddons.has(a)) allMatch = false;
+          if (!currentAddons.has(a as string)) allMatch = false;
         });
         if (allMatch) {
           matched = pkg.id;

@@ -58,9 +58,94 @@
   overflow: hidden;
 }
 
-.model-canvas {
+/* 模型预览容器 */
+.model-preview-container {
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* 模型图片容器（支持 3D 变换） */
+.model-image-wrapper {
+  width: 580rpx;
+  height: 700rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.05s linear;
+  transform-style: preserve-3d;
+}
+
+/* 模型预览图 */
+.model-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 24rpx;
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.15);
+}
+
+/* 3D 旋转底座阴影 */
+.platform-shadow {
+  position: absolute;
+  bottom: 180rpx;
+  width: 400rpx;
+  height: 24rpx;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.12) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+/* 占位图 */
+.model-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #F0F0F0;
+  border-radius: 24rpx;
+}
+
+.placeholder-icon {
+  font-size: 80rpx;
+  margin-bottom: 16rpx;
+}
+
+.placeholder-text {
+  font-size: 26rpx;
+  color: #999;
+}
+
+/* 旋转指示器 */
+.rotate-indicator {
+  position: absolute;
+  bottom: 140rpx;
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 8rpx 20rpx;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 20rpx;
+}
+
+.rotate-dot {
+  font-size: 16rpx;
+  color: #07C160;
+  animation: rotatePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes rotatePulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.rotate-label {
+  font-size: 22rpx;
+  color: #999;
 }
 
 /* Loading */
@@ -282,6 +367,55 @@
 
 .main-btn:active {
   opacity: 0.85;
+}
+
+/* 3D查看器 web-view */
+.model-webview {
+  width: 100%;
+  height: 100%;
+}
+
+/* 3D模式浮层操作栏 */
+.float-actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  padding: 16rpx 24rpx;
+  background: linear-gradient(transparent, rgba(255,255,255,0.95));
+}
+
+.float-action-bar {
+  display: flex;
+  gap: 16rpx;
+  justify-content: center;
+  align-items: center;
+}
+
+.float-btn {
+  padding: 16rpx 32rpx;
+  border-radius: 40rpx;
+  font-size: 26rpx;
+  font-weight: 500;
+}
+
+.float-btn.secondary {
+  background: rgba(255,255,255,0.9);
+  color: #333;
+  border: 1rpx solid #E0E0E0;
+}
+
+.float-btn.primary {
+  background: #333;
+  color: #fff;
+  padding: 16rpx 48rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.float-btn:active {
+  opacity: 0.8;
 }
 
 /* 分享/导出面板 */

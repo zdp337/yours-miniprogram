@@ -1,10 +1,15 @@
 // 欢迎页逻辑 — Yours·凝刻
-import { wxLogin } from '../../utils/auth';
+import { wxLogin, devLogin, isDevMode } from '../../utils/auth';
 
 Page({
   data: {
     agreed: false,
     isLoading: false,
+    isDevMode: false,
+  },
+
+  onLoad() {
+    this.setData({ isDevMode: isDevMode() });
   },
 
   /** 切换协议勾选 */
@@ -12,7 +17,7 @@ Page({
     this.setData({ agreed: !this.data.agreed });
   },
 
-  /** 微信登录 */
+  /** 登录（自动区分开发模式 / 正式模式） */
   async handleLogin() {
     if (!this.data.agreed) {
       wx.showToast({
@@ -28,7 +33,14 @@ Page({
     this.setData({ isLoading: true });
 
     try {
-      const result = await wxLogin();
+      let result;
+      if (isDevMode()) {
+        // 开发模式：直接调用后端 dev-login，不需要微信授权
+        result = await devLogin();
+      } else {
+        // 正式模式：走微信 wx.login 流程
+        result = await wxLogin();
+      }
 
       wx.showToast({
         title: result.isNewUser ? '欢迎加入 Yours·凝刻！' : '欢迎回来！',

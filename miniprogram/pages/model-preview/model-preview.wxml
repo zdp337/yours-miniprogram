@@ -15,15 +15,45 @@
 
   <!-- 3D 模型渲染区域 -->
   <view class="model-area" style="padding-top: {{navHeight}}px;">
-    <!-- WebGL Canvas -->
-    <canvas 
-      type="webgl"
-      id="modelCanvas"
-      class="model-canvas"
+
+    <!-- 方案1: 有 modelUrl 时用 web-view 加载真 3D 预览 -->
+    <web-view 
+      wx:if="{{!loading && !loadError && modelUrl && viewerUrl}}"
+      src="{{viewerUrl}}"
+      class="model-webview"
+    />
+
+    <!-- 方案2: 降级为预览图（无 modelUrl 时） -->
+    <view class="model-preview-container" 
+      wx:if="{{!loading && !loadError && !modelUrl}}"
       bindtouchstart="onTouchStart"
       bindtouchmove="onTouchMove"
       bindtouchend="onTouchEnd"
-    ></canvas>
+    >
+      <view class="platform-shadow"></view>
+      <view class="model-image-wrapper" style="transform: perspective(800px) rotateX({{rotationX}}deg) rotateY({{rotationY}}deg) scale({{scale}});">
+        <image 
+          wx:if="{{previewUrl}}"
+          class="model-image" 
+          src="{{previewUrl}}" 
+          mode="aspectFit"
+        />
+        <image 
+          wx:elif="{{originalPhotoUrl}}"
+          class="model-image" 
+          src="{{originalPhotoUrl}}" 
+          mode="aspectFit"
+        />
+        <view wx:else class="model-placeholder">
+          <text class="placeholder-icon">🎭</text>
+          <text class="placeholder-text">模型预览图加载中</text>
+        </view>
+      </view>
+      <view class="rotate-indicator" wx:if="{{autoRotate}}">
+        <text class="rotate-dot">●</text>
+        <text class="rotate-label">自动旋转中</text>
+      </view>
+    </view>
 
     <!-- Loading 骨架屏 -->
     <view class="loading-overlay" wx:if="{{loading}}">
@@ -55,7 +85,7 @@
     <view class="guide-content">
       <view class="guide-item {{guideStep >= 1 ? 'active' : ''}}">
         <text class="guide-icon">🔄</text>
-        <text class="guide-label">滑动旋转，查看全角度</text>
+        <text class="guide-label">滑动旋转，360°查看</text>
       </view>
       <view class="guide-item {{guideStep >= 2 ? 'active' : ''}}">
         <text class="guide-icon">🔍</text>
@@ -71,9 +101,8 @@
     </view>
   </view>
 
-  <!-- 底部操作区 -->
-  <view class="bottom-actions safe-area-bottom" wx:if="{{!loading && !loadError}}">
-    <!-- 功能按钮行 -->
+  <!-- 底部操作区（web-view 模式下不显示，因为 web-view 会覆盖全部） -->
+  <view class="bottom-actions safe-area-bottom" wx:if="{{!loading && !loadError && !modelUrl}}">
     <view class="action-row">
       <view class="action-item" bindtap="onExportModel">
         <text class="action-icon">📥</text>
@@ -84,9 +113,23 @@
         <text class="action-label">重新生成</text>
       </view>
     </view>
-    <!-- 主按钮 -->
     <view class="main-btn" bindtap="goToCustomize">
       <text>✨ 定制我的手办</text>
+    </view>
+  </view>
+
+  <!-- 3D 模式底部浮层操作 -->
+  <view class="float-actions safe-area-bottom" wx:if="{{!loading && !loadError && modelUrl}}">
+    <view class="float-action-bar">
+      <view class="float-btn secondary" bindtap="onExportModel">
+        <text>📥 导出</text>
+      </view>
+      <view class="float-btn secondary" bindtap="onRegenerate">
+        <text>🔄 重做</text>
+      </view>
+      <view class="float-btn primary" bindtap="goToCustomize">
+        <text>✨ 定制手办</text>
+      </view>
     </view>
   </view>
 

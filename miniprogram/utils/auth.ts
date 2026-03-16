@@ -17,6 +17,13 @@ interface LoginResult {
   isNewUser: boolean;
 }
 
+/** 是否为开发/测试号模式 */
+export const isDevMode = (): boolean => {
+  // 测试号模式下 appId 为 touristappid 或以 wx 开头的测试号
+  // 也可通过 globalData 配置判断
+  return true; // 当前开发阶段统一使用开发模式
+};
+
 /**
  * 检查登录状态
  * @returns 是否已登录
@@ -29,7 +36,13 @@ export const checkLoginStatus = (): Promise<boolean> => {
       return;
     }
 
-    // 验证 token 有效性
+    if (isDevMode()) {
+      // 开发模式：只检查 token 是否存在即可，不依赖微信 session
+      resolve(true);
+      return;
+    }
+
+    // 正式模式：验证微信 session 有效性
     wx.checkSession({
       success: () => resolve(true),
       fail: () => {
@@ -105,6 +118,27 @@ export const clearLoginStatus = (): void => {
     app.globalData.isLoggedIn = false;
     app.globalData.userInfo = null;
   }
+};
+
+/**
+ * 开发模式登录（测试号环境，绕过微信 code2Session）
+ * 直接调用后端 /api/user/dev-login 获取 token
+ */
+export const devLogin = async (): Promise<LoginResult> => {
+  const result = await post<LoginResult>('/user/dev-login', {});
+
+  // 保存 token 和用户信息
+  wx.setStorageSync('token', result.data.token);
+  wx.setStorageSync('userInfo', JSON.stringify(result.data.userInfo));
+
+  // 更新全局状态
+  const app = getApp();
+  if (app) {
+    app.globalData.isLoggedIn = true;
+    app.globalData.userInfo = result.data.userInfo as any;
+  }
+
+  return result.data;
 };
 
 /**

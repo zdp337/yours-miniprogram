@@ -89,6 +89,8 @@ model Model {
   id          BigInt    @id @default(autoincrement())
   userId      BigInt    @map("user_id")
   photoId     BigInt    @map("photo_id")
+  engine      String    @default("tripo") @db.VarChar(20) // tripo|hunyuan
+  aiTaskId    String?   @map("ai_task_id") @db.VarChar(100) // AI引擎返回的任务ID
   status      String    @default("queued") @db.VarChar(20) // queued|generating|completed|failed
   modelUrl    String?   @map("model_url") @db.VarChar(500)
   previewUrl  String?   @map("preview_url") @db.VarChar(500)

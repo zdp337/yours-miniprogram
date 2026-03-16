@@ -7,8 +7,8 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-/** 每日免费生成次数上限 */
-const DAILY_FREE_LIMIT = 2;
+/** 每日免费生成次数上限（测试阶段暂设 20，正式上线改回 2） */
+const DAILY_FREE_LIMIT = 20;
 
 /**
  * 创建照片记录
@@ -121,11 +121,24 @@ export const deletePhoto = async (userId: number, photoId: number) => {
 };
 
 /**
+ * 获取今日零点的 Date 对象（使用 UTC 纯日期字符串构造，避免时区偏差）
+ * MySQL DATE 类型只存日期部分，Prisma 传 Date 对象时会有 UTC 转换问题
+ * 用 'YYYY-MM-DDT00:00:00.000Z' 确保与数据库中存储的日期一致
+ */
+const getTodayDate = (): Date => {
+  const now = new Date();
+  // 用本地日期拼 ISO 字符串，强制 UTC 零点
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+  return new Date(`${yyyy}-${mm}-${dd}T00:00:00.000Z`);
+};
+
+/**
  * 查询今日剩余生成次数
  */
 export const getDailyUsage = async (userId: number) => {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const today = getTodayDate();
 
   const usage = await prisma.dailyUsage.findUnique({
     where: {
@@ -148,40 +161,57 @@ export const getDailyUsage = async (userId: number) => {
 /**
  * 消耗一次生成次数
  * 返回 true 表示成功消耗，false 表示次数不足
+ *
+ * 修复：不再使用 prisma.upsert()（MySQL DATE + 时区导致唯一约束冲突）
+ * 改为：findUnique → update / create，create 失败再 fallback 到 update
  */
 export const consumeUsage = async (userId: number): Promise<boolean> => {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const usage = await prisma.dailyUsage.upsert({
-    where: {
-      userId_usageDate: {
-        userId: BigInt(userId),
-        usageDate: today,
-      },
-    },
-    create: {
+  const today = getTodayDate();
+  const whereKey = {
+    userId_usageDate: {
       userId: BigInt(userId),
       usageDate: today,
-      usedCount: 1,
     },
-    update: {
-      usedCount: { increment: 1 },
-    },
-  });
+  };
 
-  if (usage.usedCount > DAILY_FREE_LIMIT) {
-    // 回退，次数不足
-    await prisma.dailyUsage.update({
-      where: {
-        userId_usageDate: {
+  // 先查询是否有今日记录
+  let usage = await prisma.dailyUsage.findUnique({ where: whereKey });
+
+  if (usage) {
+    // 已有记录 → 检查是否还有次数
+    if (usage.usedCount >= DAILY_FREE_LIMIT) {
+      return false;
+    }
+    // 增加计数
+    usage = await prisma.dailyUsage.update({
+      where: whereKey,
+      data: { usedCount: { increment: 1 } },
+    });
+  } else {
+    // 没有记录 → 创建（如果并发冲突则 fallback 到 update）
+    try {
+      usage = await prisma.dailyUsage.create({
+        data: {
           userId: BigInt(userId),
           usageDate: today,
+          usedCount: 1,
         },
-      },
-      data: { usedCount: { decrement: 1 } },
-    });
-    return false;
+      });
+    } catch (err: any) {
+      // P2002 = Unique constraint failed（并发竞争：另一个请求刚创建了记录）
+      if (err.code === 'P2002') {
+        const existing = await prisma.dailyUsage.findUnique({ where: whereKey });
+        if (existing && existing.usedCount >= DAILY_FREE_LIMIT) {
+          return false;
+        }
+        usage = await prisma.dailyUsage.update({
+          where: whereKey,
+          data: { usedCount: { increment: 1 } },
+        });
+      } else {
+        throw err;
+      }
+    }
   }
 
   return true;
@@ -191,8 +221,7 @@ export const consumeUsage = async (userId: number): Promise<boolean> => {
  * 回退一次生成次数（生成失败时调用）
  */
 export const refundUsage = async (userId: number): Promise<void> => {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const today = getTodayDate();
 
   const usage = await prisma.dailyUsage.findUnique({
     where: {

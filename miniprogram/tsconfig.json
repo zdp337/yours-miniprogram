@@ -1,13 +1,17 @@
 {
   "compilerOptions": {
-    "strict": true,
+    "strict": false,
     "target": "ES2017",
-    "module": "ESNext",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "lib": ["ES2017"],
     "outDir": "./",
     "rootDir": "./",
-    "typeRoots": ["./typings"],
+    "typeRoots": [
+      "./typings",
+      "./node_modules"
+    ],
+    "types": [],
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -21,5 +25,8 @@
   "exclude": [
     "node_modules",
     "miniprogram_npm"
+  ],
+  "files": [
+    "node_modules/miniprogram-api-typings/index.d.ts"
   ]
 }

@@ -5,7 +5,8 @@ App({
   globalData: {
     userInfo: null as WechatMiniprogram.UserInfo | null,
     isLoggedIn: false,
-    baseUrl: 'http://localhost:3000/api', // 开发环境，上线改为正式域名
+    // 开发环境：使用腾讯云服务器公网IP，手机和PC都能访问
+    baseUrl: 'http://43.138.185.112:3001/api',
   },
 
   onLaunch() {

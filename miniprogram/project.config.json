@@ -2,7 +2,7 @@
   "miniprogramRoot": "./",
   "projectname": "yours-miniprogram",
   "description": "Yours·凝刻 — AI个性化Q版3D手办定制",
-  "appid": "wx0000000000000000",
+  "appid": "wxf2d0d3769c47bae6",
   "setting": {
     "urlCheck": false,
     "es6": true,
@@ -24,8 +24,26 @@
       "ignore": [],
       "disablePlugins": [],
       "outputPath": ""
-    }
+    },
+    "uglifyFileName": false,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "minifyWXSS": true,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true
   },
   "compileType": "miniprogram",
-  "condition": {}
+  "condition": {},
+  "simulatorPluginLibVersion": {},
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "editorSetting": {},
+  "libVersion": "3.15.0"
 }

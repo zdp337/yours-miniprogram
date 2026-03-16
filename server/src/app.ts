@@ -6,6 +6,8 @@
 import Koa from 'koa';
 import koaBody from 'koa-body';
 import { config } from 'dotenv';
+import path from 'path';
+import fs from 'fs';
 import { errorHandler } from './middlewares/error';
 import { requestLogger } from './middlewares/logger';
 import userRouter from './routes/user';
@@ -18,6 +20,14 @@ import orderRouter from './routes/order';
 
 // 加载环境变量
 config();
+
+// 全局异常兜底：防止未捕获异常导致进程退出
+process.on('uncaughtException', (err) => {
+  console.error('[FATAL] Uncaught Exception:', err);
+});
+process.on('unhandledRejection', (reason) => {
+  console.error('[FATAL] Unhandled Rejection:', reason);
+});
 
 const app = new Koa();
 const PORT = parseInt(process.env.PORT || '3000', 10);
@@ -32,6 +42,52 @@ app.use(koaBody({
     keepExtensions: true,
   },
 }));
+
+// 静态文件服务：/uploads/ 目录（开发模式图片存储）
+const uploadsDir = path.join(process.cwd(), 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// 静态文件服务：/public/ 目录（3D查看器等静态页面）
+const publicDir = path.join(process.cwd(), 'public');
+
+app.use(async (ctx, next) => {
+  // /uploads/ 路径 — 上传的图片
+  if (ctx.path.startsWith('/uploads/')) {
+    const filePath = path.join(uploadsDir, ctx.path.replace('/uploads/', ''));
+    if (fs.existsSync(filePath)) {
+      const ext = path.extname(filePath).toLowerCase();
+      const mimeMap: Record<string, string> = {
+        '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
+        '.png': 'image/png', '.gif': 'image/gif', '.webp': 'image/webp',
+      };
+      ctx.type = mimeMap[ext] || 'application/octet-stream';
+      ctx.body = fs.createReadStream(filePath);
+      return;
+    }
+  }
+  // /public/ 路径 — 3D查看器等静态资源
+  if (ctx.path.startsWith('/public/')) {
+    const filePath = path.join(publicDir, ctx.path.replace('/public/', ''));
+    if (fs.existsSync(filePath)) {
+      const ext = path.extname(filePath).toLowerCase();
+      const mimeMap: Record<string, string> = {
+        '.html': 'text/html',
+        '.js': 'application/javascript',
+        '.css': 'text/css',
+        '.json': 'application/json',
+        '.png': 'image/png',
+        '.jpg': 'image/jpeg',
+        '.svg': 'image/svg+xml',
+      };
+      ctx.type = mimeMap[ext] || 'application/octet-stream';
+      ctx.body = fs.createReadStream(filePath);
+      return;
+    }
+  }
+  await next();
+});
 
 // 路由
 app.use(userRouter.routes()).use(userRouter.allowedMethods());

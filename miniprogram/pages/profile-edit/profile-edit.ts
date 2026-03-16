@@ -42,7 +42,7 @@ Page({
   },
 
   /** 获取手机号 */
-  async onGetPhoneNumber(e: WechatMiniprogram.GetPhoneNumberEvent) {
+  async onGetPhoneNumber(e: any) {
     if (e.detail.errMsg !== 'getPhoneNumber:ok' || !e.detail.code) {
       wx.showToast({ title: '取消绑定手机号', icon: 'none' });
       return;

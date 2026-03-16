@@ -2,6 +2,9 @@
 
 import { get } from '../../utils/request';
 
+/** 3D 查看器的基础 URL（部署在后端 /public/ 路径下） */
+const VIEWER_BASE_URL = 'http://43.138.185.112:3001/public/3d-viewer.html';
+
 Page({
   data: {
     statusBarHeight: 20,
@@ -10,6 +13,7 @@ Page({
     modelUrl: '',
     previewUrl: '',
     originalPhotoUrl: '',
+    viewerUrl: '', // web-view 3D 查看器完整 URL
     loading: true,
     loadProgress: 0,
     loadError: false,
@@ -19,7 +23,7 @@ Page({
     showSharePanel: false,
     showExportPanel: false,
     modelFileSize: '10-20',
-    // 3D 交互状态
+    // 降级 2D 交互状态（无 modelUrl 时使用）
     rotationX: 0,
     rotationY: 0,
     scale: 1,
@@ -96,10 +100,18 @@ Page({
         previewUrl: res.data.previewUrl || '',
         originalPhotoUrl: res.data.photo?.originalUrl || '',
         loadProgress: 100,
+        loading: false,
       });
 
-      // 初始化 3D 渲染
-      this.initWebGL();
+      // 如果有 3D 模型 URL，构建 web-view 查看器地址
+      if (res.data.modelUrl) {
+        const viewerUrl = `${VIEWER_BASE_URL}?modelUrl=${encodeURIComponent(res.data.modelUrl)}&previewUrl=${encodeURIComponent(res.data.previewUrl || '')}`;
+        this.setData({ viewerUrl });
+        console.log('[Preview] 3D 查看器 URL:', viewerUrl);
+      } else {
+        // 无 3D 模型文件，使用图片降级预览 + 自动旋转
+        this.startAutoRotate();
+      }
     } catch (err: any) {
       clearInterval(progressTimer);
       console.error('[Preview] 加载模型失败:', err);
@@ -109,54 +121,6 @@ Page({
         loadErrorMsg: '加载失败，请重试',
       });
     }
-  },
-
-  /** 初始化 WebGL 3D 渲染 */
-  initWebGL() {
-    // 使用小程序 WebGL Canvas
-    const query = wx.createSelectorQuery();
-    query.select('#modelCanvas')
-      .node()
-      .exec((res) => {
-        if (!res || !res[0] || !res[0].node) {
-          // WebGL 不可用时降级为静态预览图
-          this.setData({ loading: false });
-          this.startAutoRotate();
-          return;
-        }
-
-        const canvas = res[0].node;
-        const gl = canvas.getContext('webgl');
-
-        if (!gl) {
-          this.setData({ loading: false });
-          this.startAutoRotate();
-          return;
-        }
-
-        // 设置 canvas 尺寸
-        const systemInfo = wx.getSystemInfoSync();
-        canvas.width = systemInfo.windowWidth * systemInfo.pixelRatio;
-        canvas.height = (systemInfo.windowHeight - this.data.navHeight - 160) * systemInfo.pixelRatio;
-
-        // 基础 3D 场景设置
-        this.setupScene(gl, canvas);
-
-        this.setData({ loading: false });
-        this.startAutoRotate();
-      });
-  },
-
-  /** 设置 3D 场景（简化版 Three.js 风格） */
-  setupScene(gl: WebGLRenderingContext, canvas: any) {
-    // 设置背景色（浅灰渐变）
-    gl.clearColor(0.96, 0.96, 0.96, 1.0);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    gl.enable(gl.DEPTH_TEST);
-
-    // 在实际项目中，这里会加载 glTF 模型并设置三点布光
-    // 当前使用预览图作为降级方案，同时保留 WebGL canvas 用于后续接入 Three.js
-    console.log('[Preview] WebGL 场景已初始化，待接入 Three.js glTF 加载器');
   },
 
   /** 开始自动旋转 */
@@ -313,7 +277,7 @@ Page({
       success: (res) => {
         wx.hideLoading();
         if (res.statusCode === 200) {
-          wx.saveFile({
+          (wx as any).saveFile({
             tempFilePath: res.tempFilePath,
             success: () => {
               wx.showToast({ title: '保存成功', icon: 'success' });

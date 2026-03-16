@@ -28,8 +28,26 @@ npm-debug.log*
 _temp_*/
 *.tmp
 
+# 部署包
+server-deploy.tar.gz
+server-deploy.zip
+
+# 临时测试/验证脚本
+verify.js
+verify2.js
+reset-usage.js
+server/restart-server.js
+server/start-server.js
+server/server.pid
+server/test-*.ts
+
+# 小程序编译的 JS 文件（由 TS 编译生成）
+miniprogram/**/*.js
+!miniprogram/miniprogram_npm/**/*.js
+
 # 小程序编译缓存
 miniprogram/unpackage/
+miniprogram/project.private.config.json
 
 # Tab栏图标占位（后续替换为真实图标）
 # miniprogram/assets/icons/
