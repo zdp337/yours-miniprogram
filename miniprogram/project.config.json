@@ -32,7 +32,9 @@
     "minifyWXML": true,
     "localPlugins": false,
     "disableUseStrict": false,
-    "useCompilerPlugins": false,
+    "useCompilerPlugins": [
+  "typescript"
+],
     "condition": false,
     "swc": false,
     "disableSWC": true
